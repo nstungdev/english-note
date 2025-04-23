@@ -398,3 +398,54 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Angular specific files
+
+# Angular build output
+/dist/
+/.tmp/
+/out-tsc/
+/bazel-out/
+
+# Angular cache and coverage reports
+/.angular/cache/
+/.sass-cache/
+/coverage/
+/.nyc_output/
+
+# Angular environment variables file
+.env
+
+# Angular IDE - WebStorm / IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Angular npm configuration
+.npmrc
+
+# Angular testing files
+/karma-reports/
+/cypress/videos/
+/cypress/screenshots/
+
+# Angular e2e
+/e2e/*.js
+/e2e/*.map
+
+# Compiled JavaScript files
+*.js.map
+
+# Compiled CSS files
+*.css.map
+
+# Angular compiler config
+tsconfig.spec.json
+tsconfig.app.json
+tsconfig.json
+
+# Angular lint and editor config
+.editorconfig
+.eslintrc.json
+.prettierrc
