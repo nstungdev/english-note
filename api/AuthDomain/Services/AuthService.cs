@@ -8,6 +8,7 @@ using AuthDomain.Data;
 using api.Common.Models;
 using Microsoft.Extensions.Options;
 using api.AuthDomain.Options;
+using api.AuthDomain.DTOs;
 
 namespace api.AuthDomain.Services;
 
@@ -17,17 +18,28 @@ public class AuthService(
 	IOptions<JwtOption> jwtOptionConfigure)
 {
 	readonly JwtOption jwtOption = jwtOptionConfigure.Value;
-	public async Task<ApiResponse> RegisterUser(string username, string email, string password, string? fullName = null)
+	public async Task<ApiResponse> RegisterUser(RegisterRequest register)
 	{
-		logger.LogInformation("Registering user: {Username}", username);
-		var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
+		logger.LogInformation("Registering user: {Username}", register.Username);
+
+		// Check if the user already exists
+		var existingUser = await dbContext.Users
+			.AnyAsync(u => u.Username == register.Username || u.Email == register.Email);
+		if (existingUser)
+		{
+			return ApiResponse.ErrorResponse(
+				message: "Username or email already exists.",
+				statusCode: 400);
+		}
+
+		var hashedPassword = BCrypt.Net.BCrypt.HashPassword(register.Password);
 
 		var user = new User
 		{
-			Username = username,
-			Email = email,
+			Username = register.Username,
+			Email = register.Email,
 			PasswordHash = hashedPassword,
-			FullName = fullName,
+			FullName = register.FullName,
 			CreatedAt = DateTime.UtcNow
 		};
 
@@ -36,15 +48,17 @@ public class AuthService(
 
 		return ApiResponse.SuccessResponse(
 			data: new { user.Id, user.Username, user.Email },
-			message: "User registered successfully.");
+			message: "User registered successfully.",
+			statusCode: 201);
 	}
 
-	public async Task<ApiResponse> Login(string usernameOrEmail, string password)
+	public async Task<ApiResponse> Login(LoginRequest request)
 	{
 		var user = await dbContext.Users
-			.FirstOrDefaultAsync(u => u.Username == usernameOrEmail || u.Email == usernameOrEmail);
+			.FirstOrDefaultAsync(u => u.Username == request.UsernameOrEmail
+				|| u.Email == request.UsernameOrEmail);
 
-		if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+		if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
 		{
 			return ApiResponse.ErrorResponse("Invalid username/email or password.");
 		}
@@ -59,7 +73,8 @@ public class AuthService(
 				AccessToken = accessToken,
 				RefreshToken = refreshToken,
 			},
-			message: "Login successful.");
+			message: "Login successful.",
+			statusCode: 200);
 	}
 
 	public async Task<ApiResponse> RefreshToken(string token)
@@ -72,7 +87,9 @@ public class AuthService(
 			|| refreshToken.ExpiryDate <= DateTime.UtcNow
 			|| refreshToken.IsRevoked)
 		{
-			return ApiResponse.ErrorResponse("Invalid or expired refresh token.");
+			return ApiResponse.ErrorResponse(
+				message: "Invalid or expired refresh token.",
+				statusCode: 401);
 		}
 
 		// Revoke the old refresh token
@@ -94,7 +111,8 @@ public class AuthService(
 				AccessToken = newAccessToken,
 				RefreshToken = newRefreshToken,
 			},
-			message: "Tokens refreshed successfully.");
+			message: "Tokens refreshed successfully.",
+			statusCode: 200);
 	}
 
 	public async Task<ApiResponse> RevokeRefreshToken(string token)
@@ -111,7 +129,8 @@ public class AuthService(
 		dbContext.RefreshTokens.Update(refreshToken);
 		await dbContext.SaveChangesAsync();
 		return ApiResponse.SuccessResponse(
-			message: "Refresh token revoked successfully.");
+			message: "Refresh token revoked successfully.",
+			statusCode: 200);
 	}
 
 	private async Task<IEnumerable<Claim>> ResolveUserPermissions(User user)
