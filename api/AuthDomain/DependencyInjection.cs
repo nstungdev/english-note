@@ -1,19 +1,16 @@
-using Microsoft.Extensions.DependencyInjection;
-using Common.Data;
-using Microsoft.EntityFrameworkCore;
+using api.AuthDomain.Options;
 
-namespace AuthDomain
+namespace api.AuthDomain;
+
+public static class DependencyInjection
 {
-    public static class DependencyInjection
-    {
-        public static IServiceCollection AddAuthDomain(this IServiceCollection services, string connectionString)
-        {
-            services.AddDbContext<AppDbContext>(options =>
-                options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 32))));
+	public static IServiceCollection AddAuthDomain(
+		this IServiceCollection services,
+		IConfiguration configuration)
+	{
+		services.Configure<JwtOption>(configuration.GetSection("Jwt"));
 
-            // Register other services here if needed
 
-            return services;
-        }
-    }
+		return services;
+	}
 }

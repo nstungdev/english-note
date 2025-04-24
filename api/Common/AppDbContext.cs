@@ -3,10 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Common.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Permission> Permissions { get; set; } = null!;
         public DbSet<Group> Groups { get; set; } = null!;
