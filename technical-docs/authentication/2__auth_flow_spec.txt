@@ -1,0 +1,35 @@
+🔐 Authentication Flow (OAuth2 - Bearer Token)
+
+🔹 Registration
+- User submits username, email, password (and optionally, full name)
+- System hashes the password (e.g., BCrypt) and saves user info
+
+🔹 Login
+- Accepts username or email with password
+- Validates credentials
+- Generates JWT Access Token and Refresh Token
+
+🔹 Token Management
+- JWT Access Token contains claims (userId, permissions, group info)
+- Short-lived Access Token (e.g., 15 min)
+- Long-lived Refresh Token stored in RefreshTokens table
+- On refresh request:
+  - Validate refresh token
+  - Check for revocation/expiry
+  - Issue new tokens
+
+🔹 Permission Resolution Logic
+1. On login, resolve all permissions for the user:
+   - Collect permissions from user's assigned groups
+   - Include user-specific claims in UserPermissions
+2. Embed the resolved claims into JWT
+3. On each request, validate token and claims for route access
+
+🔹 Force Logout (Token Revocation)
+- Admin/user action sets IsRevoked = true on active refresh tokens
+- Middleware checks this flag during token refresh or access attempts
+
+📌 Notes
+- Designed for scalability and clarity
+- Easily extendable for additional domains (e.g., Vocabulary, Grammar)
+- Compatible with .NET 9 + EF Core (Code-First) + Pomelo MySQL Provider

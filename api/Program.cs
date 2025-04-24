@@ -1,3 +1,5 @@
+using AuthDomain;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,6 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
+
+// Register AuthDomain dependencies
+builder.Services.AddAuthDomain(
+    builder.Configuration.GetConnectionString("DefaultConnection")
+     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found."));
 
 var app = builder.Build();
 

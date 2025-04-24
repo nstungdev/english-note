@@ -1,0 +1,40 @@
+Database Schema Design (MySQL)
+🔹 Users
+- Id: INT UNSIGNED, PK, AUTO_INCREMENT
+- Username: VARCHAR(100), UNIQUE, NOT NULL
+- Email: VARCHAR(255), UNIQUE, NOT NULL
+- PasswordHash: VARCHAR(255), NOT NULL
+- FullName: VARCHAR(255), NULLABLE
+- CreatedAt: DATETIME, DEFAULT CURRENT_TIMESTAMP
+- UpdatedAt: DATETIME, ON UPDATE CURRENT_TIMESTAMP
+
+🔹 Permissions
+- Id: INT UNSIGNED, PK, AUTO_INCREMENT
+- Name: VARCHAR(100), UNIQUE, NOT NULL (e.g., vocabulary:create)
+- Description: TEXT, NULLABLE
+
+🔹 Groups
+- Id: INT UNSIGNED, PK, AUTO_INCREMENT
+- Name: VARCHAR(100), UNIQUE, NOT NULL
+- Description: TEXT, NULLABLE
+
+🔹 GroupPermissions (many-to-many)
+- GroupId: INT UNSIGNED, FK -> Groups(Id), PK
+- PermissionId: INT UNSIGNED, FK -> Permissions(Id), PK
+
+🔹 UserGroups (many-to-many)
+- UserId: INT UNSIGNED, FK -> Users(Id), PK
+- GroupId: INT UNSIGNED, FK -> Groups(Id), PK
+
+🔹 UserPermissions (custom overrides)
+- UserId: INT UNSIGNED, FK -> Users(Id), PK
+- PermissionId: INT UNSIGNED, FK -> Permissions(Id), PK
+
+🔹 RefreshTokens
+- Id: INT UNSIGNED, PK, AUTO_INCREMENT
+- UserId: INT UNSIGNED, FK -> Users(Id), NOT NULL
+- Token: TEXT, NOT NULL
+- ExpiryDate: DATETIME, NOT NULL
+- IsRevoked: BOOLEAN, DEFAULT FALSE
+- CreatedAt: DATETIME, DEFAULT CURRENT_TIMESTAMP
+- CreatedByIp: VARCHAR(50), NULLABLE
