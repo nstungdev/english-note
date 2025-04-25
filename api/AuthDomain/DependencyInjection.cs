@@ -12,6 +12,7 @@ public static class DependencyInjection
 		services.Configure<JwtOption>(configuration.GetSection("Jwt"));
 
 		services.AddScoped<AuthService>();
+		services.AddAuthorizationPolicies();
 		return services;
 	}
 }

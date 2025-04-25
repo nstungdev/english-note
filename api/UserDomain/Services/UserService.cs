@@ -94,4 +94,17 @@ public class UserService(AppDbContext context)
         await context.SaveChangesAsync();
         return ApiResponse.SuccessResponse(message: "User blocked successfully.");
     }
+
+    public async Task<ApiResponse> UnblockAsync(int id)
+    {
+        var user = await context.Users.FindAsync(id);
+        if (user == null)
+        {
+            return ApiResponse.ErrorResponse(message: "User not found.", statusCode: 404);
+        }
+
+        user.IsBlocked = false;
+        await context.SaveChangesAsync();
+        return ApiResponse.SuccessResponse(message: "User unblocked successfully.");
+    }
 }
