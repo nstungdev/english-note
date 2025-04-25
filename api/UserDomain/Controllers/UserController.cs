@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using api.UserDomain.DTOs;
 using api.UserDomain.Services;
 
@@ -6,6 +7,7 @@ namespace api.UserDomain.Controllers;
 
 [ApiController]
 [Route("api/users")]
+[Authorize]
 public class UserController(UserService userService) : ControllerBase
 {
     [HttpGet]
