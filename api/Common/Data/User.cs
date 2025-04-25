@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace AuthDomain.Data
+namespace api.Common.Data
 {
     public class User
     {

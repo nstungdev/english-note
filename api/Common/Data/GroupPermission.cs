@@ -1,4 +1,4 @@
-namespace AuthDomain.Data
+namespace api.Common.Data
 {
     public class GroupPermission
     {

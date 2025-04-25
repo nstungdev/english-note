@@ -4,7 +4,7 @@ using System.Text;
 using Common.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using AuthDomain.Data;
+using api.Common.Data;
 using api.Common.Models;
 using Microsoft.Extensions.Options;
 using api.AuthDomain.Options;

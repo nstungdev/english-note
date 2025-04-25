@@ -1,4 +1,4 @@
-using AuthDomain.Data;
+using api.Common.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Common.Data
