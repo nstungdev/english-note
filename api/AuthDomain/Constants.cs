@@ -4,5 +4,5 @@ namespace api.AuthDomain;
 
 public static class Constants
 {
-	public const string PermissionsClaimType = "permission";
+	public const string PermissionsClaimType = "permissions";
 }
