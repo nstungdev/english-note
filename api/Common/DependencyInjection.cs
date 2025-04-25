@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using Common.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Common

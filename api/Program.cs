@@ -1,5 +1,6 @@
 using api.Common;
 using api.AuthDomain;
+using api.UserDomain;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,7 @@ builder.Services.AddOpenApi();
 // Register AuthDomain dependencies
 builder.Services.AddCommonServices(builder.Configuration);
 builder.Services.AddAuthDomain(builder.Configuration);
+builder.Services.AddUserDomain();
 
 var app = builder.Build();
 

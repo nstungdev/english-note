@@ -20,11 +20,11 @@ namespace api.Common.Data
         [MaxLength(255)]
         public string? FullName { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-
-        public ICollection<UserGroup> UserGroups { get; set; } = new List<UserGroup>();
-        public ICollection<UserPermission> UserPermissions { get; set; } = new List<UserPermission>();
-        public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public bool IsBlocked { get; set; }
+        public ICollection<UserGroup> UserGroups { get; set; } = [];
+        public ICollection<UserPermission> UserPermissions { get; set; } = [];
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = [];
     }
 }

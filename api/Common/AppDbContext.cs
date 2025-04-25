@@ -1,7 +1,7 @@
 using api.Common.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Common.Data
+namespace api.Common
 {
     public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {

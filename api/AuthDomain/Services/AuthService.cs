@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Common.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using api.Common.Data;
@@ -9,6 +8,7 @@ using api.Common.Models;
 using Microsoft.Extensions.Options;
 using api.AuthDomain.Options;
 using api.AuthDomain.DTOs;
+using api.Common;
 
 namespace api.AuthDomain.Services;
 
@@ -40,7 +40,9 @@ public class AuthService(
 			Email = register.Email,
 			PasswordHash = hashedPassword,
 			FullName = register.FullName,
-			CreatedAt = DateTime.UtcNow
+			CreatedAt = DateTime.UtcNow,
+			UpdatedAt = DateTime.UtcNow,
+			IsBlocked = false
 		};
 
 		await dbContext.Users.AddAsync(user);
@@ -61,8 +63,18 @@ public class AuthService(
 
 		if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
 		{
-			return ApiResponse.ErrorResponse("Invalid username/email or password.");
+			return ApiResponse.ErrorResponse(
+				message: "Invalid username/email or password.",
+				statusCode: 401);
 		}
+
+		if (user.IsBlocked)
+		{
+			return ApiResponse.ErrorResponse(
+				message: "User is blocked.",
+				statusCode: 403);
+		}
+
 		var accessToken = await GenerateJwtTokenAsync(user);
 		var refreshToken = await GenerateRefreshTokenAsync(user);
 		return ApiResponse.SuccessResponse(
