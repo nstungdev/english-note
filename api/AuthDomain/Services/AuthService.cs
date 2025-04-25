@@ -66,11 +66,11 @@ public class AuthService(
 		var accessToken = await GenerateJwtTokenAsync(user);
 		var refreshToken = await GenerateRefreshTokenAsync(user);
 		return ApiResponse.SuccessResponse(
-			data: new
+			data: new AuthResponse
 			{
-				user.Id,
-				user.Username,
-				user.Email,
+				UserId = user.Id,
+				Username = user.Username,
+				Email = user.Email,
 				AccessToken = accessToken,
 				RefreshToken = refreshToken,
 			},
@@ -104,11 +104,11 @@ public class AuthService(
 		await dbContext.SaveChangesAsync();
 
 		return ApiResponse.SuccessResponse(
-			data: new
+			data: new AuthResponse
 			{
-				refreshToken.User.Id,
-				refreshToken.User.Username,
-				refreshToken.User.Email,
+				UserId = refreshToken.User.Id,
+				Username = refreshToken.User.Username,
+				Email = refreshToken.User.Email,
 				AccessToken = newAccessToken,
 				RefreshToken = newRefreshToken,
 			},
@@ -169,7 +169,7 @@ public class AuthService(
 		var tokenDescriptor = new SecurityTokenDescriptor
 		{
 			Subject = new ClaimsIdentity(claims),
-			Expires = DateTime.UtcNow.AddMinutes(15),
+			Expires = DateTime.UtcNow.AddHours(jwtOption.TokenLifetimeHours),
 			SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
 		};
 
@@ -183,7 +183,7 @@ public class AuthService(
 		{
 			UserId = user.Id,
 			Token = Guid.NewGuid().ToString(),
-			ExpiryDate = DateTime.UtcNow.AddDays(7),
+			ExpiryDate = DateTime.UtcNow.AddDays(jwtOption.RefreshTokenLifetimeDays),
 			CreatedByIp = "127.0.0.1" // Placeholder for IP address
 		};
 
