@@ -18,7 +18,7 @@ public class AuthService(
 	IOptions<JwtOption> jwtOptionConfigure)
 {
 	readonly JwtOption jwtOption = jwtOptionConfigure.Value;
-	public async Task<ApiResponse> RegisterUser(RegisterRequest register)
+	public async Task<ApiResponse> RegisterUserAsync(RegisterRequest register)
 	{
 		logger.LogInformation("Registering user: {Username}", register.Username);
 
@@ -52,8 +52,9 @@ public class AuthService(
 			statusCode: 201);
 	}
 
-	public async Task<ApiResponse> Login(LoginRequest request)
+	public async Task<ApiResponse> LoginAsync(LoginRequest request)
 	{
+		logger.LogInformation("Logging in user: {UsernameOrEmail}", request.UsernameOrEmail);
 		var user = await dbContext.Users
 			.FirstOrDefaultAsync(u => u.Username == request.UsernameOrEmail
 				|| u.Email == request.UsernameOrEmail);
@@ -62,8 +63,8 @@ public class AuthService(
 		{
 			return ApiResponse.ErrorResponse("Invalid username/email or password.");
 		}
-		var accessToken = GenerateJwtToken(user);
-		var refreshToken = GenerateRefreshToken(user);
+		var accessToken = await GenerateJwtTokenAsync(user);
+		var refreshToken = await GenerateRefreshTokenAsync(user);
 		return ApiResponse.SuccessResponse(
 			data: new
 			{
@@ -77,7 +78,7 @@ public class AuthService(
 			statusCode: 200);
 	}
 
-	public async Task<ApiResponse> RefreshToken(string token)
+	public async Task<ApiResponse> RefreshTokenAsync(string token)
 	{
 		var refreshToken = await dbContext.RefreshTokens
 			.Include(rt => rt.User)
@@ -97,8 +98,8 @@ public class AuthService(
 		dbContext.RefreshTokens.Update(refreshToken);
 
 		// Generate new tokens
-		var newAccessToken = GenerateJwtToken(refreshToken.User);
-		var newRefreshToken = GenerateRefreshToken(refreshToken.User);
+		var newAccessToken = await GenerateJwtTokenAsync(refreshToken.User);
+		var newRefreshToken = await GenerateRefreshTokenAsync(refreshToken.User);
 
 		await dbContext.SaveChangesAsync();
 
@@ -115,7 +116,7 @@ public class AuthService(
 			statusCode: 200);
 	}
 
-	public async Task<ApiResponse> RevokeRefreshToken(string token)
+	public async Task<ApiResponse> RevokeRefreshTokenAsync(string token)
 	{
 		var refreshToken = await dbContext.RefreshTokens
 			.FirstOrDefaultAsync(rt => rt.Token == token);
@@ -133,7 +134,7 @@ public class AuthService(
 			statusCode: 200);
 	}
 
-	private async Task<IEnumerable<Claim>> ResolveUserPermissions(User user)
+	private async Task<IEnumerable<Claim>> ResolveUserPermissionsAsync(User user)
 	{
 		var userPermissions = await dbContext.UserPermissions
 			.Where(up => up.UserId == user.Id)
@@ -148,24 +149,22 @@ public class AuthService(
 
 		var allPermissions = userPermissions.Union(groupPermissions).Distinct();
 
-		return allPermissions.Select(permission => new Claim("permission", permission));
+		return allPermissions.Select(permission => new Claim(Constants.PermissionsClaimType, permission));
 	}
 
-	private async Task<string> GenerateJwtToken(User user)
+	private async Task<string> GenerateJwtTokenAsync(User user)
 	{
 		var tokenHandler = new JwtSecurityTokenHandler();
 		var key = Encoding.ASCII.GetBytes(jwtOption.Key);
-		var userPermissions = await ResolveUserPermissions(user);
+		var userPermissions = await ResolveUserPermissionsAsync(user);
 
 		var claims = new List<Claim>
 		{
 			new (ClaimTypes.NameIdentifier, user.Id.ToString()),
 			new (ClaimTypes.Name, user.Username),
 			new (ClaimTypes.Email, user.Email),
-			new (
-				Constants.PermissionsClaimType,
-				string.Join(",", userPermissions))
 		};
+		claims.AddRange(userPermissions);
 
 		var tokenDescriptor = new SecurityTokenDescriptor
 		{
@@ -178,7 +177,7 @@ public class AuthService(
 		return tokenHandler.WriteToken(token);
 	}
 
-	private string GenerateRefreshToken(User user)
+	private async Task<string> GenerateRefreshTokenAsync(User user)
 	{
 		var refreshToken = new RefreshToken
 		{
@@ -188,8 +187,8 @@ public class AuthService(
 			CreatedByIp = "127.0.0.1" // Placeholder for IP address
 		};
 
-		dbContext.RefreshTokens.Add(refreshToken);
-		dbContext.SaveChanges();
+		await dbContext.RefreshTokens.AddAsync(refreshToken);
+		await dbContext.SaveChangesAsync();
 
 		return refreshToken.Token;
 	}

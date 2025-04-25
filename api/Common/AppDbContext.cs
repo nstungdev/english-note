@@ -48,6 +48,43 @@ namespace Common.Data
                 .HasOne(up => up.Permission)
                 .WithMany(p => p.UserPermissions)
                 .HasForeignKey(up => up.PermissionId);
+
+            modelBuilder.Entity<Permission>()
+                .HasData(
+                    new Permission { Id = 1, Name = "system:create" },
+                    new Permission { Id = 2, Name = "system:update" },
+                    new Permission { Id = 3, Name = "system:delete" },
+                    new Permission { Id = 4, Name = "system:read" }
+                );
+
+            modelBuilder.Entity<Group>()
+                .HasData(
+                    new Group { Id = 1, Name = "SuperAdmin" }
+                );
+
+            modelBuilder.Entity<GroupPermission>()
+                .HasData(
+                    new GroupPermission { GroupId = 1, PermissionId = 1 },
+                    new GroupPermission { GroupId = 1, PermissionId = 2 },
+                    new GroupPermission { GroupId = 1, PermissionId = 3 },
+                    new GroupPermission { GroupId = 1, PermissionId = 4 }
+                );
+
+            modelBuilder.Entity<User>()
+                .HasData(
+                    new User
+                    {
+                        Id = 1,
+                        Username = "sa",
+                        PasswordHash = "$2a$11$7ptEF7sNj7VdOOE3zZsDaO/SfcU9VSrWID9npqGaSz3tIIkvwuDNm",
+                        Email = "sa@dev.com"
+                    }
+                );
+
+            modelBuilder.Entity<UserGroup>()
+                .HasData(
+                    new UserGroup { UserId = 1, GroupId = 1 }
+                );
         }
     }
 }

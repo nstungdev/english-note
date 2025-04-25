@@ -1,4 +1,5 @@
 using api.AuthDomain.Options;
+using api.AuthDomain.Services;
 
 namespace api.AuthDomain;
 
@@ -10,7 +11,7 @@ public static class DependencyInjection
 	{
 		services.Configure<JwtOption>(configuration.GetSection("Jwt"));
 
-
+		services.AddScoped<AuthService>();
 		return services;
 	}
 }
