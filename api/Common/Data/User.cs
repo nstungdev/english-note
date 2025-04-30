@@ -26,5 +26,6 @@ namespace api.Common.Data
         public ICollection<UserGroup> UserGroups { get; set; } = [];
         public ICollection<UserPermission> UserPermissions { get; set; } = [];
         public ICollection<RefreshToken> RefreshTokens { get; set; } = [];
+        public ICollection<Vocabulary> Vocabularies { get; set; } = [];
     }
 }

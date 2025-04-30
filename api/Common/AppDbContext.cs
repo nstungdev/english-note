@@ -12,6 +12,8 @@ namespace api.Common
         public DbSet<UserGroup> UserGroups { get; set; } = null!;
         public DbSet<UserPermission> UserPermissions { get; set; } = null!;
         public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
+        public DbSet<Vocabulary> Vocabularies { get; set; } = null!;
+        public DbSet<VocabularyMeaning> VocabularyMeanings { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -48,6 +50,18 @@ namespace api.Common
                 .HasOne(up => up.Permission)
                 .WithMany(p => p.UserPermissions)
                 .HasForeignKey(up => up.PermissionId);
+
+            modelBuilder.Entity<Vocabulary>()
+                .HasMany(v => v.Meanings)
+                .WithOne(vm => vm.Vocabulary)
+                .HasForeignKey(vm => vm.VocabularyId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Vocabulary>()
+                .HasOne(v => v.User)
+                .WithMany(u => u.Vocabularies)
+                .HasForeignKey(v => v.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Permission>()
                 .HasData(

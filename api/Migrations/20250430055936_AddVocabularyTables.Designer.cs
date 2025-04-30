@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Common;
 
@@ -11,9 +12,11 @@ using api.Common;
 namespace api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250430055936_AddVocabularyTables")]
+    partial class AddVocabularyTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -264,17 +267,12 @@ namespace api.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Word")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("varchar(150)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Vocabularies");
                 });
@@ -395,17 +393,6 @@ namespace api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("api.Common.Data.Vocabulary", b =>
-                {
-                    b.HasOne("api.Common.Data.User", "User")
-                        .WithMany("Vocabularies")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("api.Common.Data.VocabularyMeaning", b =>
                 {
                     b.HasOne("api.Common.Data.Vocabulary", "Vocabulary")
@@ -438,8 +425,6 @@ namespace api.Migrations
                     b.Navigation("UserGroups");
 
                     b.Navigation("UserPermissions");
-
-                    b.Navigation("Vocabularies");
                 });
 
             modelBuilder.Entity("api.Common.Data.Vocabulary", b =>
