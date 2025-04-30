@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using api.AuthDomain.Options;
 using Serilog;
+using api.VocabularyDomain;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddCommonServices(builder.Configuration);
 builder.Services.AddAuthDomain(builder.Configuration);
 builder.Services.AddUserDomain();
+builder.Services.AddVocabularyDomain();
 
 // Add Authentication
 builder.Services.AddAuthentication(options =>
