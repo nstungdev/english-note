@@ -12,3 +12,18 @@ body {
   color: #0d47a1;
   font-weight: bold;
 }
+
+/* Styles for error snackbar */
+.error-snackbar.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+  background-color: #ee5f54;
+  color: white;
+}
+
+.error-snackbar .mat-mdc-snack-bar-label {
+  color: white;
+  font-weight: 500;
+}
+
+.error-snackbar .mat-mdc-snack-bar-actions .mdc-button__label {
+  color: white;
+}
