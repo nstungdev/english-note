@@ -196,12 +196,22 @@ public class VocabularyService(
             statusCode: 200);
     }
 
-    public async Task<ApiResponse> GetVocabularyAsync(int id, int userId)
+    public async Task<ApiResponse> GetVocabularyAsync(int id)
     {
+        if (!authManager.TryGetUserId(out var userId))
+        {
+            logger.LogWarning("User not authenticated.");
+            return ApiResponse.ErrorResponse(
+                message: "User not authenticated.",
+                statusCode: 401);
+        }
+
         if (!await IsValidUserIdAsync(userId))
         {
             logger.LogWarning("Invalid userId: {UserId}", userId);
-            return ApiResponse.ErrorResponse("Invalid user.", 400);
+            return ApiResponse.ErrorResponse(
+                message: "Invalid user.",
+                statusCode: 400);
         }
         var vocabulary = await context.Vocabularies
             .Include(v => v.Meanings)
@@ -213,6 +223,7 @@ public class VocabularyService(
         }
         var dto = new VocabularyDTO
         {
+            Id = vocabulary.Id,
             Word = vocabulary.Word,
             UserId = vocabulary.UserId,
             Meanings = vocabulary.Meanings.Select(m => new VocabularyMeaningDTO
@@ -230,8 +241,16 @@ public class VocabularyService(
         };
         return ApiResponse.SuccessResponse(dto);
     }
-    public async Task<ApiResponse> GetVocabulariesAsync(int userId, int page, int pageSize)
+    public async Task<ApiResponse> GetVocabulariesAsync(int page, int pageSize)
     {
+        if (!authManager.TryGetUserId(out var userId))
+        {
+            logger.LogWarning("User not authenticated.");
+            return ApiResponse.ErrorResponse(
+                message: "User not authenticated.",
+                statusCode: 401);
+        }
+
         if (!await IsValidUserIdAsync(userId))
         {
             logger.LogWarning("Invalid userId: {UserId}", userId);
@@ -245,6 +264,7 @@ public class VocabularyService(
             .ToListAsync();
         var dtos = vocabularies.Select(vocabulary => new VocabularyDTO
         {
+            Id = vocabulary.Id,
             Word = vocabulary.Word,
             UserId = vocabulary.UserId,
             Meanings = vocabulary.Meanings.Select(m => new VocabularyMeaningDTO

@@ -28,16 +28,14 @@ public class VocabularyController(VocabularyService vocabularyService) : Control
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var response = await vocabularyService.GetVocabularyAsync(id, userId);
+        var response = await vocabularyService.GetVocabularyAsync(id);
         return StatusCode(response.StatusCode, response);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetMany([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var response = await vocabularyService.GetVocabulariesAsync(userId, page, pageSize);
+        var response = await vocabularyService.GetVocabulariesAsync(page, pageSize);
         return StatusCode(response.StatusCode, response);
     }
 }

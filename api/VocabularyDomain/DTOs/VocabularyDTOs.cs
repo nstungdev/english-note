@@ -2,6 +2,7 @@ namespace api.VocabularyDomain.DTOs;
 
 public record VocabularyDTO
 {
+    public int Id { get; init; }
     public string Word { get; init; } = null!;
     public int UserId { get; init; }
     public List<VocabularyMeaningDTO> Meanings { get; init; } = [];
