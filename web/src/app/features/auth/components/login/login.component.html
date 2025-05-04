@@ -1,0 +1,58 @@
+<mat-card class="login-card">
+  <div class="login-header">
+    <img src="assets/logo.svg" alt="Logo" class="login-logo" />
+    <h2 class="global-title">English note</h2>
+    <p class="login-subtitle">Welcome back! Please login to your account.</p>
+  </div>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+    <mat-form-field appearance="outline" class="login-form-field">
+      <mat-label>Email</mat-label>
+      <mat-icon matPrefix>mail</mat-icon>
+      <input
+        matInput
+        formControlName="email"
+        type="email"
+        placeholder="Enter your email"
+      />
+      <mat-error
+        *ngIf="
+          loginForm.get('email')?.invalid && loginForm.get('email')?.touched
+        "
+      >
+        Please enter a valid email.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="login-form-field">
+      <mat-label>Password</mat-label>
+      <mat-icon matPrefix>lock</mat-icon>
+      <input
+        matInput
+        formControlName="password"
+        type="password"
+        placeholder="Enter your password"
+      />
+      <mat-error
+        *ngIf="
+          loginForm.get('password')?.invalid &&
+          loginForm.get('password')?.touched
+        "
+      >
+        Password must be at least 6 characters long.
+      </mat-error>
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="loginForm.invalid"
+      class="login-btn"
+    >
+      Login
+    </button>
+    <div class="login-footer">
+      <a href="#" class="forgot-password">Forgot password?</a>
+    </div>
+  </form>
+</mat-card>
