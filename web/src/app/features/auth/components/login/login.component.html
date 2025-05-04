@@ -6,20 +6,21 @@
   </div>
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
     <mat-form-field appearance="outline" class="login-form-field">
-      <mat-label>Email</mat-label>
-      <mat-icon matPrefix>mail</mat-icon>
+      <mat-label>Username/Email</mat-label>
+      <mat-icon matPrefix>person</mat-icon>
       <input
         matInput
-        formControlName="email"
-        type="email"
-        placeholder="Enter your email"
+        formControlName="usernameOrEmail"
+        type="text"
+        placeholder="Enter your username/email"
       />
       <mat-error
         *ngIf="
-          loginForm.get('email')?.invalid && loginForm.get('email')?.touched
+          loginForm.get('usernameOrEmail')?.invalid &&
+          loginForm.get('usernameOrEmail')?.touched
         "
       >
-        Please enter a valid email.
+        Username or email is required.
       </mat-error>
     </mat-form-field>
 
