@@ -1,21 +1,31 @@
 using api.Common;
 using api.Common.Data;
+using api.Common.Managers;
 using api.Common.Models;
 using api.VocabularyDomain.DTOs;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System.Linq;
 
 namespace api.VocabularyDomain.Services;
 
-public class VocabularyService(AppDbContext context, ILogger<VocabularyService> logger)
+public class VocabularyService(
+    AppDbContext context,
+    ILogger<VocabularyService> logger,
+    IAuthManager authManager)
 {
     private static readonly string[] ValidPartsOfSpeech = [
         "noun", "verb", "adjective", "adverb", "pronoun", "preposition", "conjunction", "interjection", "determiner", "article"
     ];
 
-    public async Task<ApiResponse> CreateAsync(CreateVocabularyRequest request, int userId)
+    public async Task<ApiResponse> CreateAsync(CreateVocabularyRequest request)
     {
+        if (!authManager.TryGetUserId(out var userId))
+        {
+            logger.LogWarning("User not authenticated.");
+            return ApiResponse.ErrorResponse(
+                message: "User not authenticated.",
+                statusCode: 401);
+        }
+
         if (!await IsValidUserIdAsync(userId))
         {
             logger.LogWarning("Invalid userId: {UserId}", userId);
@@ -68,47 +78,124 @@ public class VocabularyService(AppDbContext context, ILogger<VocabularyService> 
             message: "Vocabulary created successfully.",
             statusCode: 201);
     }
-    public async Task<ApiResponse> UpdateVocabularyAsync(UpdateVocabularyRequest request, int userId)
+
+    public async Task<ApiResponse> UpdateAsync(UpdateVocabularyRequest request)
     {
+        if (!authManager.TryGetUserId(out var userId))
+        {
+            logger.LogWarning("User not authenticated.");
+            return ApiResponse.ErrorResponse(
+                message: "User not authenticated.",
+                statusCode: 401);
+        }
+
         if (!await IsValidUserIdAsync(userId))
         {
             logger.LogWarning("Invalid userId: {UserId}", userId);
-            return ApiResponse.ErrorResponse("Invalid user.", 400);
+            return ApiResponse.ErrorResponse(
+                message: "Invalid user.",
+                statusCode: 400);
         }
-        var vocabulary = await context.Vocabularies
+
+        var originalVocabulary = await context.Vocabularies
             .Include(v => v.Meanings)
             .FirstOrDefaultAsync(v => v.Id == request.Id && v.UserId == userId);
-        if (vocabulary == null)
+        if (originalVocabulary == null)
         {
             logger.LogWarning("Vocabulary id {Id} not found for user {UserId}", request.Id, userId);
-            return ApiResponse.ErrorResponse("Vocabulary not found.", 404);
+            return ApiResponse.ErrorResponse(
+                message: "Vocabulary not found.",
+                statusCode: 404);
         }
+
+        // Normalize word
+        var normalizedWord = request.Word.Trim().ToLower();
+
+        // Check if the vocabulary exists if word is changed
+        if (request.Word != originalVocabulary.Word && await IsExistingVocabularyAsync(normalizedWord, userId))
+        {
+            logger.LogWarning("Duplicate word '{Word}' for user {UserId}", normalizedWord, userId);
+            return ApiResponse.ErrorResponse(
+                message: "Duplicate word.",
+                statusCode: 400);
+        }
+
+        // Validate meanings
         foreach (var meaning in request.Meanings)
         {
             if (!IsValidPartOfSpeech(meaning.PartOfSpeech))
             {
                 logger.LogWarning("Invalid part of speech: {PartOfSpeech}", meaning.PartOfSpeech);
-                return ApiResponse.ErrorResponse($"Invalid part of speech: {meaning.PartOfSpeech}", 400);
+                return ApiResponse.ErrorResponse(
+                    message: $"Invalid part of speech: {meaning.PartOfSpeech}",
+                    statusCode: 400);
             }
         }
-        // Normalize and update
-        vocabulary.Word = request.Word.Trim().ToLower();
-        vocabulary.Meanings = request.Meanings.Select(m => new VocabularyMeaning
+
+        // Remove meanings that are not in the request
+        foreach (var meaning in originalVocabulary.Meanings.Where(m => !request.Meanings.Any(rm => rm.Id == m.Id)).ToList())
         {
-            PartOfSpeech = m.PartOfSpeech.Trim().ToLower(),
-            Meaning = m.Meaning.Trim(),
-            Ipa = m.Ipa?.Trim(),
-            Pronunciation = m.Pronunciation?.Trim(),
-            Example = m.Example?.Trim(),
-            Note = m.Note?.Trim(),
-            Usage = m.Usage?.Trim()
-        }).ToList();
+            originalVocabulary.Meanings.Remove(meaning); // Loại bỏ khỏi collection để EF nhận biết
+        }
+
+        // if meaning id is null, it means it's a new meaning
+        // so we need to add it to the vocabulary
+        foreach (var meaning in request.Meanings.Where(m => m.Id == null))
+        {
+            originalVocabulary.Meanings.Add(new VocabularyMeaning
+            {
+                VocabularyId = originalVocabulary.Id,
+                PartOfSpeech = meaning.PartOfSpeech.Trim().ToLower(),
+                Meaning = meaning.Meaning.Trim(),
+                Ipa = meaning.Ipa?.Trim(),
+                Pronunciation = meaning.Pronunciation?.Trim(),
+                Example = meaning.Example?.Trim(),
+                Note = meaning.Note?.Trim(),
+                Usage = meaning.Usage?.Trim()
+            });
+        }
+
+        // if meaning id is not null, it means it's an existing meaning
+        // so we need to update it
+        foreach (var meaning in request.Meanings.Where(m => m.Id != null))
+        {
+            var existingMeaning = originalVocabulary.Meanings.FirstOrDefault(m => m.Id == meaning.Id);
+            if (existingMeaning != null)
+            {
+                existingMeaning.PartOfSpeech = meaning.PartOfSpeech.Trim().ToLower();
+                existingMeaning.Meaning = meaning.Meaning.Trim();
+                existingMeaning.Ipa = meaning.Ipa?.Trim();
+                existingMeaning.Pronunciation = meaning.Pronunciation?.Trim();
+                existingMeaning.Example = meaning.Example?.Trim();
+                existingMeaning.Note = meaning.Note?.Trim();
+                existingMeaning.Usage = meaning.Usage?.Trim();
+            }
+        }
+
+        // Update the vocabulary word and user id
+        originalVocabulary.Word = normalizedWord;
+
+        // Update the vocabulary in the database
+        context.Vocabularies.Attach(originalVocabulary);
+        context.Entry(originalVocabulary).State = EntityState.Modified;
+        // Update the meanings in the database
+        foreach (var meaning in originalVocabulary.Meanings)
+        {
+            if (meaning.Id != 0)
+            {
+                context.VocabularyMeanings.Attach(meaning);
+                context.Entry(meaning).State = EntityState.Modified;
+            }
+        }
+
+        // Save changes to the database
         await context.SaveChangesAsync();
-        logger.LogInformation("Vocabulary id {Id} updated for user {UserId}", request.Id, userId);
+        logger.LogInformation("Vocabulary '{Word}' updated for user {UserId}", normalizedWord, userId);
         return ApiResponse.SuccessResponse(
             message: "Vocabulary updated successfully.",
             statusCode: 200);
     }
+
     public async Task<ApiResponse> GetVocabularyAsync(int id, int userId)
     {
         if (!await IsValidUserIdAsync(userId))

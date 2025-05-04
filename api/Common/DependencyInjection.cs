@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using api.Common.Managers;
 
 namespace api.Common
 {
@@ -18,6 +19,8 @@ namespace api.Common
                 ServiceLifetime.Scoped);
 
             // Register other services here if needed
+            services.AddHttpContextAccessor();
+            services.AddScoped<IAuthManager, AuthManager>();
 
             return services;
         }

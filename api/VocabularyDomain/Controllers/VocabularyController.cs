@@ -14,16 +14,14 @@ public class VocabularyController(VocabularyService vocabularyService) : Control
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateVocabularyRequest request)
     {
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var response = await vocabularyService.CreateAsync(request, userId);
+        var response = await vocabularyService.CreateAsync(request);
         return StatusCode(response.StatusCode, response);
     }
 
     [HttpPut]
     public async Task<IActionResult> Update([FromBody] UpdateVocabularyRequest request)
     {
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var response = await vocabularyService.UpdateVocabularyAsync(request, userId);
+        var response = await vocabularyService.UpdateAsync(request);
         return StatusCode(response.StatusCode, response);
     }
 
