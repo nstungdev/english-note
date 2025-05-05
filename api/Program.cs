@@ -76,6 +76,9 @@ if (app.Environment.IsDevelopment())
 // Use CORS before other middleware
 app.UseCors("AllowAll");
 
+// Use global exception handler middleware
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
+
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
