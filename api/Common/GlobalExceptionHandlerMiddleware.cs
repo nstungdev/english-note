@@ -26,7 +26,7 @@ public class GlobalExceptionHandlerMiddleware
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         var response = ApiResponse.ErrorResponse(
-            message: "Unknown error",
+            message: "Unknown error. Please contact admin for support.",
             statusCode: 500
         );
 
