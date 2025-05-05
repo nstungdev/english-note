@@ -2,37 +2,35 @@ using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using api.Common.Models;
 
-public class GlobalExceptionHandlerMiddleware
+namespace api.Common
 {
-    private readonly RequestDelegate _next;
-
-    public GlobalExceptionHandlerMiddleware(RequestDelegate next)
+    public class GlobalExceptionHandlerMiddleware(RequestDelegate next)
     {
-        _next = next;
-    }
+        private readonly RequestDelegate _next = next;
 
-    public async Task InvokeAsync(HttpContext context)
-    {
-        try
+        public async Task InvokeAsync(HttpContext context)
         {
-            await _next(context);
+            try
+            {
+                await _next(context);
+            }
+            catch
+            {
+                await HandleExceptionAsync(context);
+            }
         }
-        catch (Exception ex)
+
+        private static Task HandleExceptionAsync(HttpContext context)
         {
-            await HandleExceptionAsync(context, ex);
+            var response = ApiResponse.ErrorResponse(
+                message: "Unknown error. Please contact admin for support.",
+                statusCode: 500
+            );
+
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = response.StatusCode;
+
+            return context.Response.WriteAsJsonAsync(response);
         }
-    }
-
-    private static Task HandleExceptionAsync(HttpContext context, Exception exception)
-    {
-        var response = ApiResponse.ErrorResponse(
-            message: "Unknown error. Please contact admin for support.",
-            statusCode: 500
-        );
-
-        context.Response.ContentType = "application/json";
-        context.Response.StatusCode = response.StatusCode;
-
-        return context.Response.WriteAsJsonAsync(response);
     }
 }
