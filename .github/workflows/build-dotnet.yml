@@ -1,0 +1,36 @@
+name: Build and Test .NET API
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Setup .NET SDK
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 9.0 # Adjust this to match your project's .NET version
+
+      # Restore dependencies
+      - name: Restore dependencies
+        run: dotnet restore ./api/EnglishNoteApi.sln
+
+      # Build the solution
+      - name: Build solution
+        run: dotnet build ./api/EnglishNoteApi.sln --configuration Release --no-restore
+
+      # Run tests
+      - name: Run tests
+        run: dotnet test ./api/EnglishNoteApi.sln --configuration Release --no-build --verbosity normal
