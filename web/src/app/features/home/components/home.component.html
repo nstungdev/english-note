@@ -1,0 +1,50 @@
+<div class="home-container content-wrapper">
+  <header class="home-header">
+    <h1><i class="fas fa-book"></i> Welcome to English Note</h1>
+    <p>Your journey to mastering English starts here!</p>
+  </header>
+
+  <section class="carousel-section">
+    <h2><i class="fas fa-star"></i> Featured Lessons</h2>
+    <div class="carousel">
+      <div class="carousel-item" *ngFor="let item of featuredItems">
+        <img src="assets/logo.svg" alt="Lesson Icon" class="item-image" />
+        <h3><i class="fas fa-chalkboard-teacher"></i> {{ item.title }}</h3>
+        <p>{{ item.description }}</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <section class="statistics-section">
+    <h2><i class="fas fa-chart-line"></i> Your Progress</h2>
+    <p>Track your learning journey and see your improvements over time.</p>
+    <img
+      src="assets/progress-placeholder.png"
+      alt="Progress Chart"
+      class="progress-image"
+    />
+  </section>
+
+  <hr class="divider" />
+
+  <section class="cta-section">
+    <h2><i class="fas fa-calendar-alt"></i> Upcoming Events</h2>
+    <p>
+      Don’t miss our upcoming webinars and live sessions to enhance your skills.
+    </p>
+    <img
+      src="assets/events-placeholder.png"
+      alt="Events"
+      class="events-image"
+    />
+  </section>
+
+  <footer class="home-footer">
+    <p>
+      &copy; 2025 English Note. All rights reserved.
+      <i class="fas fa-heart"></i>
+    </p>
+  </footer>
+</div>
