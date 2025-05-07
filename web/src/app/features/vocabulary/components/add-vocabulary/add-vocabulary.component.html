@@ -1,0 +1,90 @@
+<mat-toolbar color="primary" class="header">
+  <span>Add New Vocabulary</span>
+</mat-toolbar>
+
+<mat-card>
+  <form [formGroup]="vocabularyForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Word</mat-label>
+      <input matInput id="word" formControlName="word" type="text" />
+    </mat-form-field>
+
+    <div formArrayName="meanings" class="meanings-container">
+      <div
+        *ngFor="let meaning of meanings.controls; let i = index"
+        [formGroupName]="i"
+        class="meaning-group"
+      >
+        <h3>Meaning {{ i + 1 }}</h3>
+
+        <mat-form-field appearance="outline" class="half-width">
+          <mat-label>Part of Speech</mat-label>
+          <input
+            matInput
+            id="partOfSpeech"
+            formControlName="partOfSpeech"
+            type="text"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="half-width">
+          <mat-label>Meaning</mat-label>
+          <input matInput id="meaning" formControlName="meaning" type="text" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="half-width">
+          <mat-label>IPA</mat-label>
+          <input matInput id="ipa" formControlName="ipa" type="text" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="half-width">
+          <mat-label>Pronunciation</mat-label>
+          <input
+            matInput
+            id="pronunciation"
+            formControlName="pronunciation"
+            type="text"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Example</mat-label>
+          <textarea matInput id="example" formControlName="example"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Note</mat-label>
+          <textarea matInput id="note" formControlName="note"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Usage</mat-label>
+          <textarea matInput id="usage" formControlName="usage"></textarea>
+        </mat-form-field>
+
+        <button
+          mat-icon-button
+          color="warn"
+          type="button"
+          (click)="removeMeaning(i)"
+          *ngIf="meanings.length > 1"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        (click)="addMeaning()"
+        [disabled]="meanings.length >= 3"
+      >
+        Add Meaning
+      </button>
+      <button mat-raised-button color="accent" type="submit">Submit</button>
+    </div>
+  </form>
+</mat-card>

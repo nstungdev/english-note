@@ -24,6 +24,11 @@ This document outlines a set of rules that GitHub Copilot must follow when gener
 
 7. **Statement Termination**  
    Every statement must end with a **semicolon (`;`)** to maintain consistency and reduce potential syntax errors.
+8. **Angular Standalone Components**  
+   All Angular components must be created with the property `standalone: true` to follow the modern Angular design approach.
+
+9. **Angular Material UI Usage**  
+   UI for all Angular components must be built using **Angular Material** to ensure consistency in design and responsiveness.
 
 ---
 

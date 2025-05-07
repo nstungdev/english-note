@@ -1,0 +1,43 @@
+/* Add Vocabulary Component Styles */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.meanings-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.meaning-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 4px;
+  width: calc(33% - 1rem);
+  box-sizing: border-box;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+button {
+  align-self: flex-start;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
