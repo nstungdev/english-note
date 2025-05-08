@@ -8,9 +8,10 @@ import {
   withFetch,
   withInterceptorsFromDi,
 } from '@angular/common/http';
-import { LoadingInterceptor } from './shared/services/loading.interceptor';
-import { ErrorInterceptor } from './shared/services/error.interceptor';
+import { LoadingInterceptor } from './shared/interceptors/loading.interceptor';
+import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { AuthInterceptor } from './features/auth/services/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -26,6 +27,11 @@ export const appConfig: ApplicationConfig = {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
       multi: true,
     },
   ],

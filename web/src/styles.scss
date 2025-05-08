@@ -35,6 +35,21 @@ body {
   color: white;
 }
 
+/* Styles for success snackbar */
+.success-snackbar.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+  background-color: #4caf50;
+  color: white;
+}
+
+.success-snackbar .mat-mdc-snack-bar-label {
+  color: white;
+  font-weight: 500;
+}
+
+.success-snackbar .mat-mdc-snack-bar-actions .mdc-button__label {
+  color: white;
+}
+
 /* Global Mat-Card customization: fresh background for all mat-card components */
 .mat-mdc-card {
   background-color: transparent !important;

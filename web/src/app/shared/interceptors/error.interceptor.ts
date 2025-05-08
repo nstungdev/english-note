@@ -24,25 +24,33 @@ export class ErrorInterceptor implements HttpInterceptor {
           const body = event.body as ApiResponse;
 
           if (body && body?.statusCode) {
-            // Kiểm tra nếu status code là 4xx hoặc 5xx
+            // Check status code 4xx, 5xx
             if (
               Math.floor(body.statusCode / 100) === 4 ||
               Math.floor(body.statusCode / 100) === 5
             ) {
-              // Hiển thị thông báo lỗi qua snackbar
+              // Display error message if available
               this.showErrorMessage(body.message || 'Unknow error.');
+            }
+            // Check status code 2xx
+            else if (Math.floor(body.statusCode / 100) === 2) {
+              // Display success message if available
+              const successMessage = body.message;
+              if (successMessage && successMessage != 'Success') {
+                this.showSuccessMessage(successMessage);
+              }
             }
           }
         }
         return event;
       }),
       catchError((error) => {
-        // Xử lý lỗi HTTP không phải từ response body
+        // Handle error response
         if (error.error instanceof ErrorEvent) {
-          // Lỗi client-side hoặc mạng
+          // Client-side error
           this.showErrorMessage('Client error: ' + error.error.message);
         } else {
-          // Lỗi từ backend
+          // Server-side error
           const errorMessage = error.error?.message ?? 'Unknow error.';
           this.showErrorMessage(errorMessage);
         }
@@ -58,6 +66,15 @@ export class ErrorInterceptor implements HttpInterceptor {
       horizontalPosition: 'right',
       verticalPosition: 'bottom',
       panelClass: ['error-snackbar'],
+    });
+  }
+
+  private showSuccessMessage(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      horizontalPosition: 'right',
+      verticalPosition: 'bottom',
+      panelClass: ['success-snackbar'],
     });
   }
 }

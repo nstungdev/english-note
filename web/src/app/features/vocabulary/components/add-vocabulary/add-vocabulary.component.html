@@ -15,6 +15,8 @@
         type="button"
         icon="plus"
         (clicked)="addMeaning()"
+        matTooltip="shortcut: alt + a"
+        matTooltipPosition="above"
         [outline]="true"
       >
         Add meaning
@@ -88,7 +90,7 @@
 
         <app-custom-button
           (clicked)="removeMeaning(i)"
-          matTooltip="shortcut: alt + r (need focus on the meaning)"
+          matTooltip="shortcut: alt + r"
           matTooltipPosition="above"
           *ngIf="meanings.length > 1"
           icon="trash"

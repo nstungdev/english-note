@@ -82,6 +82,7 @@ export class AddVocabularyComponent {
       await firstValueFrom(this.vocabularyService.create(request));
       this.vocabularyForm.reset();
       this.meanings.clear();
+      this.meanings.push(this.createMeaningGroup());
     }
   }
 
