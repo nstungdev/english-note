@@ -6,7 +6,7 @@
     (keydown)="addMeaningShortcut($event)"
   >
     <app-custom-input
-      placeholder="Word"
+      label="Word"
       formControlName="word"
       class="word-width"
     ></app-custom-input>
@@ -37,12 +37,12 @@
         <!-- First row: Part of Speech and Meaning -->
         <div class="meaning-row">
           <app-custom-input
-            placeholder="Part of Speech"
+            label="Part of Speech"
             formControlName="partOfSpeech"
             class="half-width"
           ></app-custom-input>
           <app-custom-input
-            placeholder="Meaning"
+            label="Meaning"
             formControlName="meaning"
             class="half-width"
           ></app-custom-input>
@@ -51,12 +51,12 @@
         <!-- Second row: IPA and Pronunciation -->
         <div class="meaning-row">
           <app-custom-input
-            placeholder="IPA"
+            label="IPA"
             formControlName="ipa"
             class="half-width"
           ></app-custom-input>
           <app-custom-input
-            placeholder="Pronunciation"
+            label="Pronunciation"
             formControlName="pronunciation"
             class="half-width"
           ></app-custom-input>
@@ -64,7 +64,7 @@
 
         <!-- Third row: Usage -->
         <app-custom-textarea
-          placeholder="Usage"
+          label="Usage"
           formControlName="usage"
           [rows]="1"
           class="full-width"
@@ -72,7 +72,7 @@
 
         <!-- Fourth row: Note -->
         <app-custom-textarea
-          placeholder="Note"
+          label="Note"
           formControlName="note"
           [rows]="1"
           class="full-width"
@@ -80,7 +80,7 @@
 
         <!-- Fifth row: Example -->
         <app-custom-textarea
-          placeholder="Example"
+          label="Example"
           formControlName="example"
           [rows]="1"
           class="full-width"

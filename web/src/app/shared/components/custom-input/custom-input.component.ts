@@ -1,8 +1,13 @@
-import { Component, Input, forwardRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, Input, forwardRef, OnInit, Injector } from '@angular/core';
+import {
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+  NgControl,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { getErrorMessage } from '../../utils/form-utils';
 
 @Component({
   selector: 'app-custom-input',
@@ -18,19 +23,33 @@ import { MatInputModule } from '@angular/material/input';
   templateUrl: './custom-input.component.html',
   styleUrls: ['./custom-input.component.scss'],
 })
-export class CustomInputComponent implements ControlValueAccessor {
+export class CustomInputComponent implements ControlValueAccessor, OnInit {
   private static idCounter = 0;
   public _uid: number;
-  @Input() placeholder: string = '';
+  @Input() label: string = '';
   @Input() type: string = 'text';
 
   value: string = '';
   disabled: boolean = false;
   onChange = (_: any) => {};
   onTouched = () => {};
+  private ngControl: NgControl | null = null;
 
-  constructor() {
+  constructor(private injector: Injector) {
     this._uid = CustomInputComponent.idCounter++;
+  }
+
+  ngOnInit(): void {
+    const control = this.injector.get(NgControl, null);
+    this.ngControl = control;
+    if (this.ngControl) {
+      this.ngControl.valueAccessor = this;
+    }
+  }
+
+  /** Returns the appropriate error message based on validation errors */
+  get errorMessage(): string | null {
+    return getErrorMessage(this.ngControl?.control || null, this.label);
   }
 
   writeValue(obj: any): void {

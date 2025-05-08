@@ -18,6 +18,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CustomInputComponent } from '@components/custom-input/custom-input.component';
 import { CustomTextareaComponent } from '@components/custom-textarea/custom-textarea.component';
 import { CustomButtonComponent } from '@components/custom-button/custom-button.component';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-add-vocabulary',
@@ -75,18 +76,12 @@ export class AddVocabularyComponent {
     this.meanings.removeAt(index);
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.vocabularyForm.valid) {
       const request: CreateVocabularyRequest = this.vocabularyForm.value;
-      this.vocabularyService.create(request).subscribe({
-        next: (response) => {
-          alert(response.message);
-          this.vocabularyForm.reset();
-        },
-        error: (err) => {
-          alert(err.message);
-        },
-      });
+      await firstValueFrom(this.vocabularyService.create(request));
+      this.vocabularyForm.reset();
+      this.meanings.clear();
     }
   }
 

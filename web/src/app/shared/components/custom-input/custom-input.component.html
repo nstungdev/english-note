@@ -1,7 +1,5 @@
 <div class="custom-input-field">
-  <label class="custom-label" for="custom-input-{{ _uid }}">{{
-    placeholder
-  }}</label>
+  <label class="custom-label" for="custom-input-{{ _uid }}">{{ label }}</label>
   <input
     id="custom-input-{{ _uid }}"
     [type]="type"
@@ -11,4 +9,5 @@
     [disabled]="disabled"
     class="custom-input"
   />
+  <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
 </div>

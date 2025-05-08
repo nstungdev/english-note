@@ -41,3 +41,9 @@
   cursor: not-allowed;
   color: var(--muted-gray);
 }
+
+.error-message {
+  color: var(--danger-red, #f44336);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
