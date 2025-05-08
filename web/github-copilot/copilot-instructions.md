@@ -27,8 +27,14 @@ This document outlines a set of rules that GitHub Copilot must follow when gener
 8. **Angular Standalone Components**  
    All Angular components must be created with the property `standalone: true` to follow the modern Angular design approach.
 
-9. **Angular Material UI Usage**  
-   UI for all Angular components must be built using **Angular Material** to ensure consistency in design and responsiveness.
+9. **UI Component Usage Priority**  
+   If there are **custom UI components** already defined in the project, **prefer using them first**. Only use **Angular Material UI** components if there is no suitable custom component available. Ensure that **all necessary modules are properly imported** to avoid missing references.
+
+10. **CSS/SASS Unit Preference**  
+    When writing styles in SCSS or CSS, always use **`rem` units** instead of `px` or `em` to improve scalability and consistency across screen sizes.
+
+11. **Modern and Compact UI Design**  
+    When generating a new page or component, the design must be **modern, visually appealing, and compact**. Avoid overly complex layouts or heavy styling.
 
 ---
 

@@ -1,0 +1,9 @@
+$step: 0.25;
+@for $i from 1 through 5 {
+  .gl-header#{$i} {
+    font-size: calc(1rem * (1.5 - ($i - 1) * $step));
+    font-weight: 500;
+    color: var(--header-color);
+    margin-bottom: 1rem;
+  }
+}

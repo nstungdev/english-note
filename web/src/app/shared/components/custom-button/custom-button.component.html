@@ -1,0 +1,17 @@
+<button
+  [attr.type]="type"
+  [disabled]="disabled"
+  (click)="handleClick($event)"
+  [ngClass]="[
+    'custom-button',
+    'custom-button--' + variant,
+    outline ? 'custom-button--outline' : ''
+  ]"
+>
+  <fa-icon
+    *ngIf="iconTuple"
+    [icon]="iconTuple"
+    class="custom-button__icon"
+  ></fa-icon>
+  <ng-content></ng-content>
+</button>

@@ -1,0 +1,43 @@
+:host {
+  display: block;
+  width: 100%;
+  font-family: inherit;
+}
+
+.custom-input-field {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.custom-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--medium-gray);
+}
+
+.custom-input {
+  display: block;
+  width: 100%;
+  padding: 0.625rem 0.75rem; /* roughly p-2.5 */
+  font-size: 0.875rem;
+  color: var(--muted-gray);
+  background-color: var(--very-soft-gray);
+  border: 1px solid var(--light-gray);
+  border-radius: 0.5rem; /* rounded-lg */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+}
+
+.custom-input:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.3); /* blue ring */
+}
+
+.custom-input:disabled {
+  background-color: var(--light-gray);
+  cursor: not-allowed;
+  color: var(--muted-gray);
+}

@@ -14,7 +14,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
-import { MatToolbar } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CustomInputComponent } from '@components/custom-input/custom-input.component';
+import { CustomTextareaComponent } from '@components/custom-textarea/custom-textarea.component';
+import { CustomButtonComponent } from '@components/custom-button/custom-button.component';
 
 @Component({
   selector: 'app-add-vocabulary',
@@ -24,12 +27,15 @@ import { MatToolbar } from '@angular/material/toolbar';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    CustomInputComponent,
+    CustomTextareaComponent,
+    CustomButtonComponent,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
     MatCardModule,
-    MatToolbar,
+    MatTooltipModule,
   ],
 })
 export class AddVocabularyComponent {
@@ -81,6 +87,23 @@ export class AddVocabularyComponent {
           alert(err.message);
         },
       });
+    }
+  }
+
+  // keyboard shortcut to add meaning alt + 'a'
+  addMeaningShortcut(event: KeyboardEvent): void {
+    if (event.altKey && event.key === 'a') {
+      event.preventDefault();
+      this.addMeaning();
+    }
+  }
+
+  // keyboard shortcut to remove meaning alt + 'r' which meanings is focused
+  // if there is only one meaning, it will not be removed
+  removeMeaningShortcut(event: KeyboardEvent, index: number): void {
+    if (event.altKey && event.key === 'r' && this.meanings.length > 1) {
+      event.preventDefault();
+      this.removeMeaning(index);
     }
   }
 }

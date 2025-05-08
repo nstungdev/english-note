@@ -1,4 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+}
 
 html,
 body {
@@ -7,6 +13,7 @@ body {
 body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-size: 14px;
 }
 .global-title {
   color: #0d47a1;
@@ -26,4 +33,10 @@ body {
 
 .error-snackbar .mat-mdc-snack-bar-actions .mdc-button__label {
   color: white;
+}
+
+/* Global Mat-Card customization: fresh background for all mat-card components */
+.mat-mdc-card {
+  background-color: transparent !important;
+  padding: 1rem;
 }

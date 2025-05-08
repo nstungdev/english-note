@@ -1,0 +1,14 @@
+<div class="custom-textarea-field">
+  <label class="custom-label" for="custom-textarea-{{ _uid }}">{{
+    placeholder
+  }}</label>
+  <textarea
+    id="custom-textarea-{{ _uid }}"
+    class="custom-textarea"
+    [rows]="rows"
+    [value]="value"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+    [disabled]="disabled"
+  ></textarea>
+</div>

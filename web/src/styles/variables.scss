@@ -4,10 +4,27 @@
   --medium-gray: #616161;
   --light-blue: #e3f2fd;
   --blue: #1e88e5;
+  --blue-dark: #1565c0; // ~10% darker than --blue
   --softer-blue: #bbdefb;
   --muted-gray: #546e7a;
   --light-lavender: #f3e5f5;
   --very-light-green: #f9fbe7;
   --muted-blue-gray: #455a64;
   --light-gray: #eceff1;
+  --danger-red: #f44336;
+
+  /* Button variant colors */
+  --btn-color-primary: var(--blue);
+  --btn-color-primary-dark: var(--blue-dark);
+  --btn-color-secondary: var(--muted-gray);
+  --btn-color-secondary-dark: var(--medium-gray);
+  --btn-color-warning: #ff9800;
+  --btn-color-warning-dark: #f57c00;
+  --btn-color-danger: var(--danger-red);
+  --btn-color-danger-dark: #d32f2f;
+  --btn-color-info: var(--light-blue);
+  --btn-color-info-dark: var(--blue);
+
+  /* Typography colors */
+  --header-color: var(--blue);
 }

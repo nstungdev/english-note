@@ -1,0 +1,14 @@
+<div class="custom-input-field">
+  <label class="custom-label" for="custom-input-{{ _uid }}">{{
+    placeholder
+  }}</label>
+  <input
+    id="custom-input-{{ _uid }}"
+    [type]="type"
+    [value]="value"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+    [disabled]="disabled"
+    class="custom-input"
+  />
+</div>

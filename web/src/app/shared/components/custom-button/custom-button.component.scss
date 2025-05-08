@@ -1,0 +1,64 @@
+/* Styles for custom button inspired by Flowbite */
+:host {
+  width: fit-content;
+}
+
+.custom-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fff;
+  background-color: var(--blue);
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-button:hover {
+  background-color: var(--blue-dark);
+}
+
+.custom-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.25rem rgba(30, 136, 229, 0.3);
+}
+
+/* Variant styles */
+@each $variant in primary, secondary, warning, danger, info {
+  .custom-button--#{$variant} {
+    background-color: var(--btn-color-#{$variant});
+    color: #fff;
+    border: none;
+
+    &:hover {
+      background-color: var(--btn-color-#{$variant}-dark);
+    }
+  }
+  /* Outline modifier */
+  .custom-button--#{$variant}.custom-button--outline {
+    background-color: transparent;
+    color: var(--btn-color-#{$variant});
+    border: 1px solid var(--btn-color-#{$variant});
+
+    &:hover {
+      background-color: var(--btn-color-#{$variant});
+      color: #fff;
+    }
+  }
+}
+
+/* Disabled override should come last */
+.custom-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.custom-button__icon {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.5rem;
+}

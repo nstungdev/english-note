@@ -1,0 +1,45 @@
+:host {
+  display: block;
+  width: 100%;
+  font-family: inherit;
+}
+
+.custom-textarea-field {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.custom-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--medium-gray);
+}
+
+.custom-textarea {
+  display: block;
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--muted-gray);
+  background-color: var(--very-soft-gray);
+  border: 1px solid var(--light-gray);
+  border-radius: 0.5rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.custom-textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 0.1875rem rgba(30, 136, 229, 0.3);
+}
+
+.custom-textarea:disabled {
+  background-color: var(--light-gray);
+  cursor: not-allowed;
+  color: var(--muted-gray);
+}
