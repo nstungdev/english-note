@@ -1,0 +1,17 @@
+/* Layout container spans full height */
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Push menu items to right */
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* Main content area grows */
+.content {
+  flex: 1 1 auto;
+  padding: 1rem;
+}
