@@ -10,3 +10,62 @@
     background-color: #f4f4f4;
   }
 }
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  width: 100%;
+  padding: 0.5rem 0;
+  font-size: 1.1rem;
+}
+.header-index {
+  width: 3rem;
+  font-weight: 600;
+  color: #1976d2;
+}
+.header-word {
+  flex: 1;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+.header-meanings {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #388e3c;
+  font-weight: 500;
+}
+.header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.meanings-list {
+  padding: 0.5rem 0.5rem 0.5rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.meaning-item {
+  background: #f8fafc;
+  border-radius: 0.5rem;
+  padding: 0.7rem 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+.meaning-line {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 1.05rem;
+  margin-bottom: 0.2rem;
+}
+.meaning-label {
+  font-weight: 500;
+  color: #616161;
+}
+.meaning-value {
+  color: #222;
+}
+.meaning-icon {
+  font-size: 1.2rem;
+}

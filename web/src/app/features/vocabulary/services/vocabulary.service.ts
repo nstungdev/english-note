@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
   VocabularyDTO,
@@ -7,6 +7,9 @@ import {
   UpdateVocabularyRequest,
 } from '../models/vocabulary.model';
 import { environment } from '@environments/environment';
+import { map } from 'rxjs/operators';
+import { Paging } from '@/shared/models/paging.model';
+import { ApiResponse } from '@/shared/models/api-response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -41,12 +44,9 @@ export class VocabularyService {
   getList(
     page: number = 1,
     pageSize: number = 10
-  ): Observable<VocabularyDTO[]> {
-    return this.http.get<VocabularyDTO[]>(this.baseUrl, {
-      params: {
-        page: page.toString(),
-        pageSize: pageSize.toString(),
-      },
+  ): Observable<ApiResponse<Paging<VocabularyDTO>>> {
+    return this.http.get<ApiResponse<Paging<VocabularyDTO>>>(this.baseUrl, {
+      params: { page: page.toString(), pageSize: pageSize.toString() },
     });
   }
 }

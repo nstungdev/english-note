@@ -256,6 +256,8 @@ public class VocabularyService(
             logger.LogWarning("Invalid userId: {UserId}", userId);
             return ApiResponse.ErrorResponse("Invalid user.", 400);
         }
+        var totalCount = await context.Vocabularies
+            .CountAsync(v => v.UserId == userId);
         var vocabularies = await context.Vocabularies
             .Include(v => v.Meanings)
             .Where(v => v.UserId == userId)
@@ -280,7 +282,12 @@ public class VocabularyService(
                 Usage = m.Usage
             }).ToList()
         }).ToList();
-        return ApiResponse.SuccessResponse(dtos);
+        return ApiResponse.SuccessResponse(new PagingDto<VocabularyDTO> {
+            Items = dtos,
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount
+        });
     }
 
     private Task<bool> IsValidUserIdAsync(int userId)

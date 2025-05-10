@@ -1,26 +1,66 @@
-<div class="vocabulary-table">
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    <ng-container matColumnDef="word">
-      <th mat-header-cell *matHeaderCellDef>Word</th>
-      <td mat-cell *matCellDef="let element">{{ element.word }}</td>
-    </ng-container>
+<div class="vocabulary-table-wrapper">
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let row of dataSource">
+      <mat-expansion-panel-header>
+        <div class="panel-header">
+          <span class="header-index">{{
+            getIndex(dataSource.indexOf(row))
+          }}</span>
+          <span class="header-word">{{ row.word }}</span>
+          <span class="header-meanings">
+            <mat-icon color="primary" fontIcon="menu_book"></mat-icon>
+            {{ row.meanings.length }} meanings
+          </span>
+          <span class="header-actions">
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="$event.stopPropagation(); onEdit(row)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="$event.stopPropagation(); onDelete(row)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </span>
+        </div>
+      </mat-expansion-panel-header>
+      <div class="meanings-list">
+        <div
+          *ngFor="let meaning of row.meanings; let i = index"
+          class="meaning-item"
+        >
+          <div class="meaning-line">
+            <mat-icon class="meaning-icon" color="accent">translate</mat-icon>
+            <span class="meaning-label">Meaning {{ i + 1 }}:</span>
+            <span class="meaning-value">{{ meaning.meaning }}</span>
+          </div>
+          <div class="meaning-line">
+            <mat-icon class="meaning-icon" color="accent">category</mat-icon>
+            <span class="meaning-label">Part of speech:</span>
+            <span class="meaning-value">{{ meaning.partOfSpeech }}</span>
+          </div>
+          <div class="meaning-line">
+            <mat-icon class="meaning-icon" color="accent">volume_up</mat-icon>
+            <span class="meaning-label">IPA:</span>
+            <span class="meaning-value">{{ meaning.ipa }}</span>
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
 
-    <ng-container matColumnDef="meaning">
-      <th mat-header-cell *matHeaderCellDef>Meaning</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.meanings[0]?.meaning }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>Actions</th>
-      <td mat-cell *matCellDef="let element">
-        <button mat-button>Edit</button>
-        <button mat-button>Delete</button>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
+  <mat-paginator
+    [length]="totalCount"
+    [pageSize]="pageSize"
+    [pageIndex]="page - 1"
+    [pageSizeOptions]="[5, 10, 20]"
+    (page)="onPageChange($event)"
+    aria-label="Vocabulary pagination"
+  >
+  </mat-paginator>
 </div>
