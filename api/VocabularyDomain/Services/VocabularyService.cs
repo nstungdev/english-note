@@ -6,6 +6,8 @@ using api.VocabularyDomain.DTOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
+using api.Common.Constants;
+using Sentry.Protocol;
 
 namespace api.VocabularyDomain.Services;
 
@@ -21,9 +23,9 @@ public class VocabularyService(
     {
         if (!authManager.TryGetUserId(out var userId))
         {
-            logger.LogWarning("User not authenticated.");
+            logger.LogWarning(AppMessage.E01);
             return ApiResponse.ErrorResponse(
-                message: "User not authenticated.",
+                message: AppMessage.E01,
                 statusCode: 401);
         }
 
@@ -31,7 +33,7 @@ public class VocabularyService(
         {
             logger.LogWarning("Invalid userId: {UserId}", userId);
             return ApiResponse.ErrorResponse(
-                message: "Invalid user.",
+                message: AppMessage.E02,
                 statusCode: 400);
         }
         // Normalize word
