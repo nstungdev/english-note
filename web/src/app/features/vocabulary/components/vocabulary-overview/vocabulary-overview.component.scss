@@ -1,0 +1,22 @@
+.vocabulary-overview-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem 0;
+}
+
+.vocabulary-table-section {
+  box-shadow: 0 2px 8px rgba(30, 136, 229, 0.08);
+  border-radius: 1rem;
+  padding: 2rem 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .vocabulary-overview-container {
+    gap: 1rem;
+    padding: 1rem 0;
+  }
+  .vocabulary-table-section {
+    padding: 1rem 0.5rem;
+  }
+}

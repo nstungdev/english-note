@@ -38,8 +38,6 @@ export class VocabularyTableComponent implements AfterViewInit {
     this.loadVocabularies();
   }
 
-  ngOnInit(): void {}
-
   loadVocabularies() {
     firstValueFrom(
       this.vocabularyService.getList(this.page, this.pageSize)
