@@ -28,14 +28,21 @@ public class VocabularyController(VocabularyService vocabularyService) : Control
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
-        var response = await vocabularyService.GetVocabularyAsync(id);
+        var response = await vocabularyService.GetAsync(id);
         return StatusCode(response.StatusCode, response);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetMany([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var response = await vocabularyService.GetVocabulariesAsync(page, pageSize);
+        var response = await vocabularyService.GetManyAsync(page, pageSize);
+        return StatusCode(response.StatusCode, response);
+    }
+
+    [HttpPost("import")]
+    public async Task<IActionResult> Import(IFormFile file)
+    {
+        var response = await vocabularyService.ImportAsync(file);
         return StatusCode(response.StatusCode, response);
     }
 }

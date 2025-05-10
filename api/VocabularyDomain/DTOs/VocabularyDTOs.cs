@@ -33,3 +33,24 @@ public record VocabularyMeaningDTO
     public string? Note { get; init; }
     public string? Usage { get; init; }
 }
+
+// DTO cho import
+public record ImportVocabularyItem
+{
+    public string? Word { get; set; }
+    public List<ImportVocabularyMeaning>? Meaning { get; set; }
+}
+public record ImportVocabularyMeaning
+{
+    public string? Definition { get; set; }
+    public string? PartOfSpeech { get; set; }
+    public string? Ipa { get; set; }
+    public string? Pronunciation { get; set; }
+    public string? Note { get; set; }
+    public string? ExampleSentence { get; set; }
+}
+public record ImportResultDto
+{
+    public int Inserted { get; set; }
+    public int Failed { get; set; }
+}

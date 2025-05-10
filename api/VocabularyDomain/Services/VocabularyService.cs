@@ -4,6 +4,8 @@ using api.Common.Managers;
 using api.Common.Models;
 using api.VocabularyDomain.DTOs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using System.Text.Json;
 
 namespace api.VocabularyDomain.Services;
 
@@ -15,7 +17,6 @@ public class VocabularyService(
     private static readonly string[] ValidPartsOfSpeech = [
         "noun", "verb", "adjective", "adverb", "pronoun", "preposition", "conjunction", "interjection", "determiner", "article"
     ];
-
     public async Task<ApiResponse> CreateAsync(CreateVocabularyRequest request)
     {
         if (!authManager.TryGetUserId(out var userId))
@@ -78,7 +79,6 @@ public class VocabularyService(
             message: "Vocabulary created successfully.",
             statusCode: 201);
     }
-
     public async Task<ApiResponse> UpdateAsync(UpdateVocabularyRequest request)
     {
         if (!authManager.TryGetUserId(out var userId))
@@ -121,13 +121,13 @@ public class VocabularyService(
         }
 
         // Validate meanings
-        foreach (var meaning in request.Meanings)
+        foreach (var pos in request.Meanings.Select(e => e.PartOfSpeech))
         {
-            if (!IsValidPartOfSpeech(meaning.PartOfSpeech))
+            if (!IsValidPartOfSpeech(pos))
             {
-                logger.LogWarning("Invalid part of speech: {PartOfSpeech}", meaning.PartOfSpeech);
+                logger.LogWarning("Invalid part of speech: {PartOfSpeech}", pos);
                 return ApiResponse.ErrorResponse(
-                    message: $"Invalid part of speech: {meaning.PartOfSpeech}",
+                    message: $"Invalid part of speech: {pos}",
                     statusCode: 400);
             }
         }
@@ -195,8 +195,7 @@ public class VocabularyService(
             message: "Vocabulary updated successfully.",
             statusCode: 200);
     }
-
-    public async Task<ApiResponse> GetVocabularyAsync(int id)
+    public async Task<ApiResponse> GetAsync(int id)
     {
         if (!authManager.TryGetUserId(out var userId))
         {
@@ -241,7 +240,7 @@ public class VocabularyService(
         };
         return ApiResponse.SuccessResponse(dto);
     }
-    public async Task<ApiResponse> GetVocabulariesAsync(int page, int pageSize)
+    public async Task<ApiResponse> GetManyAsync(int page, int pageSize)
     {
         if (!authManager.TryGetUserId(out var userId))
         {
@@ -289,19 +288,117 @@ public class VocabularyService(
             TotalCount = totalCount
         });
     }
-
+    public async Task<ApiResponse> ImportAsync(IFormFile file)
+    {
+        if (!authManager.TryGetUserId(out var userId))
+        {
+            logger.LogWarning("User not authenticated.");
+            return ApiResponse.ErrorResponse(
+                message: "User not authenticated.",
+                statusCode: 401);
+        }
+        if (!await IsValidUserIdAsync(userId))
+        {
+            logger.LogWarning("Invalid userId: {UserId}", userId);
+            return ApiResponse.ErrorResponse(
+                message: "Invalid user.",
+                statusCode: 400);
+        }
+        if (file == null || file.Length == 0)
+        {
+            return ApiResponse.ErrorResponse(
+                message: "No file uploaded.", 
+                statusCode: 400);
+        }
+        List<ImportVocabularyItem>? items = null;
+        try
+        {
+            using var stream = file.OpenReadStream();
+            items = await JsonSerializer.DeserializeAsync<List<ImportVocabularyItem>>(
+                stream, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to parse import file");
+            return ApiResponse.ErrorResponse(
+                message: "Invalid file format.", 
+                statusCode: 400);
+        }
+        if (items == null || items.Count == 0)
+        {
+            return ApiResponse.ErrorResponse("No data to import.", 400);
+        }
+        var normalizedWords = items
+            .Where(i => !string.IsNullOrWhiteSpace(i.Word))
+            .Select(i => i.Word!.Trim().ToLower())
+            .Distinct()
+            .ToList();
+        var existingWords = await context.Vocabularies
+            .Where(v => v.UserId == userId && normalizedWords.Contains(v.Word))
+            .Select(v => v.Word)
+            .ToListAsync();
+        var newVocabularies = new List<Vocabulary>();
+        int failed = 0;
+        foreach (var item in items)
+        {
+            if (string.IsNullOrWhiteSpace(item.Word))
+            {
+                failed++;
+                continue;
+            }
+            var normalizedWord = item.Word!.Trim().ToLower();
+            if (existingWords.Contains(normalizedWord) || newVocabularies.Any(v => v.Word == normalizedWord))
+            {
+                failed++;
+                continue;
+            }
+            if (item.Meaning == null || item.Meaning.Count == 0
+                || item.Meaning.Any(m => string.IsNullOrWhiteSpace(m.PartOfSpeech) || !IsValidPartOfSpeech(m.PartOfSpeech!)))
+            {
+                failed++;
+                continue;
+            }
+            var vocabulary = new Vocabulary
+            {
+                Word = normalizedWord,
+                UserId = userId,
+                Meanings = item.Meaning.Select(m => new VocabularyMeaning
+                {
+                    PartOfSpeech = m.PartOfSpeech != null ? m.PartOfSpeech.Trim().ToLower() : string.Empty,
+                    Meaning = m.Definition != null ? m.Definition.Trim() : string.Empty,
+                    Ipa = m.Ipa?.Trim(),
+                    Pronunciation = m.Pronunciation?.Trim(),
+                    Example = m.ExampleSentence?.Trim(),
+                    Note = m.Note?.Trim(),
+                }).ToList()
+            };
+            newVocabularies.Add(vocabulary);
+        }
+        if (newVocabularies.Count > 0)
+        {
+            await context.Vocabularies.AddRangeAsync(newVocabularies);
+            await context.SaveChangesAsync();
+        }
+        var result = new ImportResultDto
+        {
+            Inserted = newVocabularies.Count,
+            Failed = failed
+        };
+        logger.LogInformation("Import completed: {Inserted} inserted, {Failed} failed", result.Inserted, result.Failed);
+        return ApiResponse.SuccessResponse(
+            data: result, 
+            message: "Import completed.");
+    }
     private Task<bool> IsValidUserIdAsync(int userId)
     {
         // check user exists in the database
         return context.Users.AnyAsync(e => e.Id == userId);
     }
-
     private Task<bool> IsExistingVocabularyAsync(string word, int userId)
     {
         // check if the vocabulary exists in the database
         return context.Vocabularies.AnyAsync(v => v.Word == word && v.UserId == userId);
     }
-
     private static bool IsValidPartOfSpeech(string partOfSpeech)
     {
         return !string.IsNullOrWhiteSpace(partOfSpeech) &&
