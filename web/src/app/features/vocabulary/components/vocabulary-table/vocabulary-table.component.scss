@@ -26,8 +26,7 @@
 }
 .header-word {
   flex: 1;
-  font-weight: 600;
-  font-size: 1.2rem;
+  font-weight: 550;
 }
 .header-meanings {
   display: flex;
@@ -39,6 +38,7 @@
 .header-actions {
   display: flex;
   gap: 0.5rem;
+  padding: 0 0.5rem;
 }
 .meanings-list {
   padding: 0.5rem 0.5rem 0.5rem 2.5rem;

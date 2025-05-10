@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CustomButtonComponent } from '@/shared/components/custom-button/custom-button.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-vocabulary-action-panel',
@@ -12,8 +13,9 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./vocabulary-action-panel.component.scss'],
 })
 export class VocabularyActionPanelComponent {
+  constructor(private readonly router: Router) {}
   onAdd(): void {
-    // TODO: Implement add vocabulary action (e.g., open dialog or navigate)
+    this.router.navigate(['/add-vocabulary']);
   }
   onBulkUpload(): void {
     // TODO: Implement bulk upload action
