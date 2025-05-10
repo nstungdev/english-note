@@ -1,21 +1,15 @@
-<mat-card class="action-panel-card">
-  <div class="action-panel-content">
-    <app-custom-button icon="plus" variant="primary" (clicked)="onAdd()">
-      Add Vocabulary
-    </app-custom-button>
-    <app-custom-button
-      icon="upload"
-      variant="secondary"
-      (clicked)="onBulkUpload()"
-    >
-      Import
-    </app-custom-button>
-    <app-custom-button
-      icon="download"
-      variant="secondary"
-      (clicked)="onExport()"
-    >
-      Export
-    </app-custom-button>
-  </div>
-</mat-card>
+<div class="action-panel-content">
+  <app-custom-button icon="plus" variant="primary" (clicked)="onAdd()">
+    Add Vocabulary
+  </app-custom-button>
+  <app-custom-button
+    icon="upload"
+    variant="secondary"
+    (clicked)="onBulkUpload()"
+  >
+    Import
+  </app-custom-button>
+  <app-custom-button icon="download" variant="secondary" (clicked)="onExport()">
+    Export
+  </app-custom-button>
+</div>
