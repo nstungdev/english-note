@@ -1,0 +1,29 @@
+<div class="dialog-container">
+  <h2 class="dialog-title">Import Vocabulary</h2>
+  <div class="dialog-content">
+    <label class="file-label" for="vocab-file-input">Choose a JSON file</label>
+    <input
+      id="vocab-file-input"
+      type="file"
+      accept=".json,application/json"
+      class="file-input"
+      (change)="onFileChange($event)"
+    />
+    <div class="file-helper">Only .json files are accepted. Max size: 2MB.</div>
+    <div class="file-name" *ngIf="fileName">Selected: {{ fileName }}</div>
+    <div class="error-message" *ngIf="error">{{ error }}</div>
+  </div>
+  <div class="dialog-actions">
+    <app-custom-button variant="secondary" (clicked)="onClose()"
+      >Close</app-custom-button
+    >
+    <app-custom-button
+      variant="primary"
+      [disabled]="!selectedFile || loading"
+      (clicked)="onImport()"
+    >
+      <ng-container *ngIf="!loading">Import</ng-container>
+      <app-loading *ngIf="loading" size="small"></app-loading>
+    </app-custom-button>
+  </div>
+</div>

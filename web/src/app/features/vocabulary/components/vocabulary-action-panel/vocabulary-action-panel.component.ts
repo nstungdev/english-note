@@ -4,6 +4,8 @@ import { CustomButtonComponent } from '@/shared/components/custom-button/custom-
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ImportVocabularyDialogComponent } from '../import-vocabulary-dialog/import-vocabulary-dialog.component';
 
 @Component({
   selector: 'app-vocabulary-action-panel',
@@ -13,12 +15,26 @@ import { Router } from '@angular/router';
   styleUrls: ['./vocabulary-action-panel.component.scss'],
 })
 export class VocabularyActionPanelComponent {
-  constructor(private readonly router: Router) {}
+  constructor(
+    private readonly router: Router,
+    private readonly dialog: MatDialog
+  ) {}
   onAdd(): void {
     this.router.navigate(['/add-vocabulary']);
   }
   onBulkUpload(): void {
-    // TODO: Implement bulk upload action
+    this.dialog
+      .open(ImportVocabularyDialogComponent, {
+        width: '400px',
+        disableClose: true,
+        autoFocus: false,
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          // TODO: reload vocabulary list if needed
+        }
+      });
   }
   onExport(): void {
     // TODO: Implement export action

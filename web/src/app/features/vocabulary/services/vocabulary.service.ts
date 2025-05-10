@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
   VocabularyDTO,
@@ -7,7 +7,6 @@ import {
   UpdateVocabularyRequest,
 } from '../models/vocabulary.model';
 import { environment } from '@environments/environment';
-import { map } from 'rxjs/operators';
 import { Paging } from '@/shared/models/paging.model';
 import { ApiResponse } from '@/shared/models/api-response.model';
 
@@ -17,7 +16,7 @@ import { ApiResponse } from '@/shared/models/api-response.model';
 export class VocabularyService {
   private readonly baseUrl = `${environment.apiUrl}/vocabularies`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   create(
     request: CreateVocabularyRequest
@@ -48,5 +47,11 @@ export class VocabularyService {
     return this.http.get<ApiResponse<Paging<VocabularyDTO>>>(this.baseUrl, {
       params: { page: page.toString(), pageSize: pageSize.toString() },
     });
+  }
+
+  importVocabularyBulk(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<any>(`${this.baseUrl}/bulk-upload`, formData);
   }
 }

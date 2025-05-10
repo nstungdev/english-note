@@ -35,7 +35,7 @@ export class CustomInputComponent implements ControlValueAccessor, OnInit {
   onTouched = () => {};
   private ngControl: NgControl | null = null;
 
-  constructor(private injector: Injector) {
+  constructor(private readonly injector: Injector) {
     this._uid = CustomInputComponent.idCounter++;
   }
 
