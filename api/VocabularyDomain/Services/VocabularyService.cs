@@ -283,7 +283,8 @@ public class VocabularyService(
                 Usage = m.Usage
             }).ToList()
         }).ToList();
-        return ApiResponse.SuccessResponse(new PagingDto<VocabularyDTO> {
+        return ApiResponse.SuccessResponse(new PagingDto<VocabularyDTO>
+        {
             Items = dtos,
             Page = page,
             PageSize = pageSize,
@@ -309,7 +310,7 @@ public class VocabularyService(
         if (file == null || file.Length == 0)
         {
             return ApiResponse.ErrorResponse(
-                message: "No file uploaded.", 
+                message: "No file uploaded.",
                 statusCode: 400);
         }
         List<ImportVocabularyItem>? items = null;
@@ -323,7 +324,7 @@ public class VocabularyService(
         {
             logger.LogWarning(ex, "Failed to parse import file");
             return ApiResponse.ErrorResponse(
-                message: "Invalid file format.", 
+                message: "Invalid file format.",
                 statusCode: 400);
         }
         if (items == null || items.Count == 0)
@@ -388,8 +389,48 @@ public class VocabularyService(
         };
         logger.LogInformation("Import completed: {Inserted} inserted, {Failed} failed", result.Inserted, result.Failed);
         return ApiResponse.SuccessResponse(
-            data: result, 
+            data: result,
             message: "Import completed.");
+    }
+    public async Task<ApiResponse> ExportAllToJsonAsync()
+    {
+        if (!authManager.TryGetUserId(out var userId))
+        {
+            logger.LogWarning(AppMessage.E01);
+            return ApiResponse.ErrorResponse(
+                message: AppMessage.E01,
+                statusCode: 401);
+        }
+        if (!await IsValidUserIdAsync(userId))
+        {
+            logger.LogWarning("Invalid userId: {UserId}", userId);
+            return ApiResponse.ErrorResponse(
+                message: "Invalid user.",
+                statusCode: 400);
+        }
+        var vocabularies = await context.Vocabularies
+            .Include(v => v.Meanings)
+            .Where(v => v.UserId == userId)
+            .ToListAsync();
+        var exportData = vocabularies.Select(v => new
+        {
+            v.Word,
+            Meanings = v.Meanings.Select(m => new
+            {
+                m.PartOfSpeech,
+                m.Meaning,
+                m.Ipa,
+                m.Pronunciation,
+                m.Example,
+                m.Note,
+                m.Usage
+            }).ToList()
+        }).ToList();
+        var json = JsonSerializer.Serialize(exportData, new JsonSerializerOptions
+        {
+            WriteIndented = true
+        });
+        return ApiResponse.SuccessResponse(json);
     }
     private Task<bool> IsValidUserIdAsync(int userId)
     {

@@ -45,4 +45,17 @@ public class VocabularyController(VocabularyService vocabularyService) : Control
         var response = await vocabularyService.ImportAsync(file);
         return StatusCode(response.StatusCode, response);
     }
+
+    [HttpGet("export-json")]
+    public async Task<IActionResult> ExportToJson()
+    {
+        var response = await vocabularyService.ExportAllToJsonAsync();
+        if (!response.Success)
+        {
+            return StatusCode(response.StatusCode, response);
+        }
+        var json = response.Data as string;
+        var fileName = $"vocabulary-{DateTime.Now:dd-MM-yyyy-HH-mm-ss}.json";
+        return File(System.Text.Encoding.UTF8.GetBytes(json ?? "[]"), "application/json", fileName);
+    }
 }
