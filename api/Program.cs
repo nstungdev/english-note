@@ -7,6 +7,7 @@ using System.Text;
 using api.AuthDomain.Options;
 using Serilog;
 using api.VocabularyDomain;
+using Microsoft.EntityFrameworkCore; // Add this using directive
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,6 +68,13 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+// Apply pending migrations automatically
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await dbContext.Database.MigrateAsync();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
