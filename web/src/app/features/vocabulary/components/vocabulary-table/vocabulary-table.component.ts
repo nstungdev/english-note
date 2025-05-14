@@ -45,7 +45,6 @@ export class VocabularyTableComponent implements AfterViewInit {
       const data = response.data;
       this.dataSource = data.items;
       this.totalCount = data.totalCount;
-      console.log(this.dataSource);
     });
   }
 

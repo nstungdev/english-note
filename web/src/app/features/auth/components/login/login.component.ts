@@ -44,7 +44,6 @@ export class LoginComponent {
       this.authService
         .login(this.loginForm.value)
         .then((response) => {
-          console.log('Login successful', response);
           this.router.navigate(['/home']); // Redirect to /home
         })
         .catch((error) => {

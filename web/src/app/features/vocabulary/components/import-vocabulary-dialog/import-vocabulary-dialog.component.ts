@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { CustomButtonComponent } from '@/shared/components/custom-button/custom-button.component';
 import { VocabularyService } from '../../services/vocabulary.service';
@@ -11,7 +10,6 @@ import { LoadingComponent } from '@/shared/components/loading/loading.component'
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     MatDialogModule,
     CustomButtonComponent,
     LoadingComponent,

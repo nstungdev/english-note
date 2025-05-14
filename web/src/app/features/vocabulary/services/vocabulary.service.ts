@@ -9,6 +9,7 @@ import {
 import { environment } from '@environments/environment';
 import { Paging } from '@/shared/models/paging.model';
 import { ApiResponse } from '@/shared/models/api-response.model';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -53,5 +54,25 @@ export class VocabularyService {
     const formData = new FormData();
     formData.append('file', file);
     return this.http.post<any>(`${this.baseUrl}/bulk-upload`, formData);
+  }
+
+  exportToJson(): Observable<{ blob: Blob; filename: string }> {
+    return this.http
+      .get(`${this.baseUrl}/export-json`, {
+        responseType: 'blob',
+        observe: 'response',
+      })
+      .pipe(
+        map((response) => {
+          const contentDisposition = response.headers.get(
+            'content-disposition'
+          );
+          const filename = contentDisposition
+            ? contentDisposition.split('filename=')[1]?.split(';')[0]?.trim() ||
+              'vocabularies.json'
+            : 'vocabularies.json';
+          return { blob: response.body as Blob, filename };
+        })
+      );
   }
 }
