@@ -1,9 +1,8 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { VocabularyService } from '../../services/vocabulary.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTableDataSource } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { VocabularyDTO } from '../../models/vocabulary.model';
 import { firstValueFrom } from 'rxjs';

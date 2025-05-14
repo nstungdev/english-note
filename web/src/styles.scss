@@ -1,4 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+@use 'styles/core.scss';
+@use 'styles/table/table.scss';
+
 * {
   box-sizing: border-box;
   margin: 0;

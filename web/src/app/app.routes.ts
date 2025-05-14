@@ -4,6 +4,7 @@ import { HomeComponent } from './features/home/components/home.component';
 import { AddVocabularyComponent } from './features/vocabulary/components/add-vocabulary/add-vocabulary.component';
 import { LayoutComponent } from './shared/components/layout/layout.component';
 import { VocabularyOverviewComponent } from './features/vocabulary/components/vocabulary-overview/vocabulary-overview.component';
+import { UserTableComponent } from './features/user/components/user-table/user-table.component';
 
 export const routes: Routes = [
   {
@@ -17,6 +18,7 @@ export const routes: Routes = [
       { path: 'home', component: HomeComponent },
       { path: 'vocabulary', component: VocabularyOverviewComponent },
       { path: 'add-vocabulary', component: AddVocabularyComponent },
+      { path: 'users', component: UserTableComponent },
       { path: '', redirectTo: '/home', pathMatch: 'full' },
       { path: '**', redirectTo: '/home' },
     ],

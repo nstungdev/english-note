@@ -1,0 +1,30 @@
+@use 'variables';
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+
+  .table-header {
+    background-color: var(--table-header-background-color) !important;
+    color: var(--table-header-text-color);
+
+    &:nth-child(1) {
+      border-radius: 0.5rem 0 0 0;
+    }
+
+    &:nth-last-child(1) {
+      border-radius: 0 0.5rem 0 0;
+    }
+  }
+
+  td {
+    border-bottom-style: none;
+  }
+}
+
+.table-striped {
+  tr:nth-child(odd) {
+    background-color: var(--table-striped-background-color);
+  }
+}

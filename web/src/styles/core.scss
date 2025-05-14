@@ -1,0 +1,13 @@
+:root {
+  --core-color: #3498db;
+  --success-color: #4caf50;
+  --error-color: #e74c3c;
+}
+
+.text-success {
+  color: var(--success-color) !important;
+}
+
+.text-error {
+  color: var(--error-color) !important;
+}
