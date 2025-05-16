@@ -1,0 +1,39 @@
+<!-- Placeholder for custom select component HTML file -->
+<div class="custom-select-field">
+  <label class="custom-label" for="custom-select-{{ _uid }}">{{ label }}</label>
+  <div class="custom-select-wrapper">
+    <select
+      id="custom-select-{{ _uid }}"
+      class="custom-select"
+      [value]="value"
+      (change)="onSelectionChange($event)"
+      (blur)="onBlur()"
+      [disabled]="disabled"
+    >
+      <option value="" disabled selected *ngIf="placeholder">
+        {{ placeholder }}
+      </option>
+      <option *ngFor="let option of options" [value]="option.value">
+        {{ option.label }}
+      </option>
+    </select>
+    <span class="custom-select-arrow" aria-hidden="true">
+      <svg
+        width="1.25rem"
+        height="1.25rem"
+        viewBox="0 0 20 20"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M6 8L10 12L14 8"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </span>
+  </div>
+  <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+</div>

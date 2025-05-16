@@ -11,4 +11,7 @@
     [readonly]="true"
     [value]="user()?.email || ''"
   />
+
+  <app-custom-select label="Group" [options]="groupOptions()" />
+  <app-custom-select label="Permission" [options]="permissionOptions()" />
 </div>

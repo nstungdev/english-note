@@ -1,0 +1,69 @@
+// Placeholder for custom select component SCSS file
+
+:host {
+  display: block;
+  width: 100%;
+  font-family: inherit;
+}
+
+.custom-select-field {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.custom-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--medium-gray);
+}
+
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select {
+  display: block;
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  padding-right: 2.5rem; // space for the arrow
+  font-size: 0.875rem;
+  color: var(--muted-gray);
+  background-color: var(--very-soft-gray);
+  border: 1px solid var(--input-border-color);
+  border-radius: 0.5rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+  appearance: none;
+}
+
+.custom-select:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 0.1875rem rgba(30, 136, 229, 0.3);
+}
+
+.custom-select:disabled {
+  background-color: var(--light-gray);
+  cursor: not-allowed;
+  color: var(--muted-gray);
+}
+
+.custom-select-arrow {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--medium-gray, #888);
+  display: flex;
+  align-items: center;
+}
+
+.error-message {
+  color: var(--danger-red, #f44336);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
