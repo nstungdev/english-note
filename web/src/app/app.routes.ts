@@ -5,6 +5,7 @@ import { AddVocabularyComponent } from './features/vocabulary/components/add-voc
 import { LayoutComponent } from './shared/components/layout/layout.component';
 import { VocabularyOverviewComponent } from './features/vocabulary/components/vocabulary-overview/vocabulary-overview.component';
 import { UserTableComponent } from './features/user/components/user-table/user-table.component';
+import { AuthGuard } from './features/auth/auth.guard';
 
 export const routes: Routes = [
   {
@@ -14,6 +15,7 @@ export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
+    canActivate: [AuthGuard],
     children: [
       { path: 'home', component: HomeComponent },
       { path: 'vocabulary', component: VocabularyOverviewComponent },

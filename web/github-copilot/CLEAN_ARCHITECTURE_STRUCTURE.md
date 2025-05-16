@@ -5,9 +5,6 @@
 ```
 src/
   app/
-    core/
-      models/
-      services/
     features/
       feature1/
         components/
@@ -31,13 +28,6 @@ src/
 ```
 
 ## Explanation of Layers
-
-### Core Layer
-
-- **Purpose**: Contains business logic and models that are independent of Angular or any other framework.
-- **Contents**:
-  - `models/`: Define data structures and interfaces.
-  - `services/`: Define abstract services or business logic.
 
 ### Feature Layer
 
