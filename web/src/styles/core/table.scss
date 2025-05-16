@@ -1,4 +1,8 @@
-@use 'variables';
+:root {
+  --table-header-background-color: var(--core-color);
+  --table-header-text-color: #ffffff;
+  --table-striped-background-color: #e4ebec;
+}
 
 .table {
   width: 100%;

@@ -1,0 +1,36 @@
+:root {
+  --notification-error-background-color: var(--error-color);
+  --notification-error-text-color: #ffffff;
+  --notification-success-background-color: var(--success-color);
+  --notification-success-text-color: #ffffff;
+}
+
+/* error-notification */
+.error-notification.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+  background-color: var(--notification-error-background-color);
+  color: var(--notification-error-text-color);
+}
+
+.error-notification .mat-mdc-snack-bar-label {
+  color: var(--notification-error-text-color);
+  font-weight: 500;
+}
+
+.error-notification .mat-mdc-snack-bar-actions .mdc-button__label {
+  color: var(--notification-error-text-color);
+}
+
+/* success-notification */
+.success-notification.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+  background-color: var(--notification-success-background-color);
+  color: var(--notification-success-text-color);
+}
+
+.success-notification .mat-mdc-snack-bar-label {
+  color: var(--notification-success-text-color);
+  font-weight: 500;
+}
+
+.success-notification .mat-mdc-snack-bar-actions .mdc-button__label {
+  color: var(--notification-success-text-color);
+}

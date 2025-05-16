@@ -7,3 +7,11 @@ $step: 0.25;
     margin-bottom: 1rem;
   }
 }
+
+.text-success {
+  color: var(--success-color) !important;
+}
+
+.text-error {
+  color: var(--error-color) !important;
+}

@@ -63,7 +63,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       duration: 5000,
       horizontalPosition: 'right',
       verticalPosition: 'bottom',
-      panelClass: ['error-snackbar'],
+      panelClass: ['error-notification'],
     });
   }
 
