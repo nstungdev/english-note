@@ -21,24 +21,10 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(
       map((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
-          const body = event.body as ApiResponse;
-
-          if (body && body?.statusCode) {
-            // Check status code 4xx, 5xx
-            if (
-              Math.floor(body.statusCode / 100) === 4 ||
-              Math.floor(body.statusCode / 100) === 5
-            ) {
-              // Display error message if available
-              this.showErrorMessage(body.message || 'Unknow error.');
-            }
-            // Check status code 2xx
-            else if (Math.floor(body.statusCode / 100) === 2) {
-              // Display success message if available
-              const successMessage = body.message;
-              if (successMessage && successMessage != 'Success') {
-                this.showSuccessMessage(successMessage);
-              }
+          if (event.status / 100 === 2) {
+            const response: ApiResponse<any> = event.body;
+            if (response?.message && response?.message !== 'Success') {
+              this.showSuccessMessage(response.message);
             }
           }
         }
@@ -51,8 +37,20 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.showErrorMessage('Client error: ' + error.error.message);
         } else {
           // Server-side error
-          const errorMessage = error.error?.message ?? 'Unknow error.';
-          this.showErrorMessage(errorMessage);
+          const errorMessage = error.error?.message;
+          if (errorMessage) {
+            this.showErrorMessage(errorMessage);
+          } else if (error.status === 401) {
+            this.showErrorMessage('Unauthorized access. Please log in again.');
+          } else if (error.status === 403) {
+            this.showErrorMessage(
+              'Forbidden access. You do not have permission to perform this action.'
+            );
+          } else {
+            this.showErrorMessage(
+              'Unknown error occurred. Please try again later.'
+            );
+          }
         }
 
         return throwError(() => error);
