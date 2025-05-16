@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { UserDTO } from '../models/user.model';
+import { Group, Permission, User } from '../models/user.model';
 import { ApiResponse } from '@/shared/models/api-response.model';
 
 @Injectable({
@@ -14,7 +14,25 @@ export class UserService {
   constructor(private readonly http: HttpClient) {}
 
   getList() {
-    return this.http.get<ApiResponse<UserDTO[]>>(`${environment.apiUrl}/users`);
+    return this.http.get<ApiResponse<User[]>>(`${environment.apiUrl}/users`);
+  }
+
+  getById(userId: number): Observable<ApiResponse<User>> {
+    return this.http.get<ApiResponse<User>>(
+      `${environment.apiUrl}/users/${userId}`
+    );
+  }
+
+  getPermissions(): Observable<ApiResponse<Permission[]>> {
+    return this.http.get<ApiResponse<Permission[]>>(
+      `${environment.apiUrl}/users/permissions`
+    );
+  }
+
+  getGroups(): Observable<ApiResponse<Group[]>> {
+    return this.http.get<ApiResponse<Group[]>>(
+      `${environment.apiUrl}/users/groups`
+    );
   }
 
   toggleBlock(userId: number, isBlocked: boolean): Observable<void> {

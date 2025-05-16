@@ -1,12 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { UserService } from '../../services/user.service';
-import { UserDTO } from '../../models/user.model';
+import { User } from '../../models/user.model';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-table',
@@ -20,9 +26,10 @@ import { MatTableModule } from '@angular/material/table';
   ],
   templateUrl: './user-table.component.html',
   styleUrls: ['./user-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserTableComponent implements OnInit {
-  dataSource: UserDTO[] = [];
+  dataSource = signal<User[]>([]);
   displayedColumns: string[] = [
     'index',
     'username',
@@ -31,7 +38,10 @@ export class UserTableComponent implements OnInit {
     'actions',
   ];
 
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
     this.fetchUsers();
@@ -39,21 +49,21 @@ export class UserTableComponent implements OnInit {
 
   fetchUsers() {
     firstValueFrom(this.userService.getList()).then((response) => {
-      this.dataSource = response.data;
+      this.dataSource.set(response.data);
     });
   }
 
-  toggleBlock(user: UserDTO): void {
+  toggleBlock(user: User): void {
     this.userService.toggleBlock(user.id, user.isBlocked).subscribe(() => {
       this.fetchUsers();
     });
   }
 
-  onEdit(user: UserDTO): void {
-    // Implement edit functionality here
+  onEdit(user: User): void {
+    this.router.navigate(['/update-user', user.id]);
   }
 
-  onDelete(user: UserDTO): void {
+  onDelete(user: User): void {
     // Implement delete functionality here
   }
 

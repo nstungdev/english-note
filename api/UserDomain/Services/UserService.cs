@@ -18,10 +18,35 @@ public class UserService(AppDbContext context)
                 Username = u.Username,
                 Email = u.Email,
                 Groups = u.UserGroups.Select(ug => ug.Group.Name),
+                Permissions = u.UserPermissions.Select(up => up.Permission.Name),
                 IsBlocked = u.IsBlocked
             })
             .ToArrayAsync();
         return ApiResponse.SuccessResponse(data: users);
+    }
+
+    public async Task<ApiResponse> GetByIdAsync(int id)
+    {
+        var user = await context.Users
+            .Include(u => u.UserGroups)
+            .ThenInclude(ug => ug.Group)
+            .Select(u => new UserResponse
+            {
+                Id = u.Id,
+                Username = u.Username,
+                Email = u.Email,
+                Groups = u.UserGroups.Select(ug => ug.Group.Name),
+                Permissions = u.UserPermissions.Select(up => up.Permission.Name),
+                IsBlocked = u.IsBlocked
+            })
+            .FirstOrDefaultAsync(u => u.Id == id);
+        if (user == null)
+        {
+            return ApiResponse.ErrorResponse(
+                message: "User not found.",
+                statusCode: 404);
+        }
+        return ApiResponse.SuccessResponse(data: user);
     }
 
     public async Task<ApiResponse> UpdatePermissionsAsync(int id, UpdateUserPermissionsRequest request)
@@ -106,5 +131,31 @@ public class UserService(AppDbContext context)
         user.IsBlocked = false;
         await context.SaveChangesAsync();
         return ApiResponse.SuccessResponse(message: "User unblocked successfully.");
+    }
+
+    public async Task<ApiResponse> GetPermissionsAsync()
+    {
+        var permisison = await context.Permissions
+            .Select(p => new
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description
+            })
+            .ToArrayAsync();
+        return ApiResponse.SuccessResponse(data: permisison);
+    }
+
+    public async Task<ApiResponse> GetGroupsAsync()
+    {
+        var groups = await context.Groups
+            .Select(g => new
+            {
+                Id = g.Id,
+                Name = g.Name,
+                Description = g.Description
+            })
+            .ToArrayAsync();
+        return ApiResponse.SuccessResponse(data: groups);
     }
 }

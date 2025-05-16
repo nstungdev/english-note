@@ -12,5 +12,6 @@ public class UserResponse
     public required string Username { get; set; }
     public required string Email { get; set; }
     public IEnumerable<string> Groups { get; set; } = [];
+    public IEnumerable<string> Permissions { get; set; } = [];
     public bool IsBlocked { get; set; }
 }

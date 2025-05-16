@@ -19,6 +19,14 @@ public class UserController(UserService userService) : ControllerBase
         return StatusCode(response.StatusCode, response);
     }
 
+    [HttpGet("{id}")]
+    [Authorize(Policy = Constants.UserManagerPolicy)]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var response = await userService.GetByIdAsync(id);
+        return StatusCode(response.StatusCode, response);
+    }
+
     [HttpPost("{id}/permissions")]
     [Authorize(Policy = Constants.UserManagerPolicy)]
     public async Task<IActionResult> UpdatePermissions(int id, [FromBody] UpdateUserPermissionsRequest request)
@@ -40,6 +48,20 @@ public class UserController(UserService userService) : ControllerBase
     public async Task<IActionResult> Unblock(int id)
     {
         var response = await userService.UnblockAsync(id);
+        return StatusCode(response.StatusCode, response);
+    }
+
+    [HttpGet("permissions")]
+    public async Task<IActionResult> GetPermissions()
+    {
+        var response = await userService.GetPermissionsAsync();
+        return StatusCode(response.StatusCode, response);
+    }
+
+    [HttpGet("groups")]
+    public async Task<IActionResult> GetGroups()
+    {
+        var response = await userService.GetGroupsAsync();
         return StatusCode(response.StatusCode, response);
     }
 }

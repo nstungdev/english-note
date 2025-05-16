@@ -28,9 +28,10 @@ export class CustomInputComponent implements ControlValueAccessor, OnInit {
   public _uid: number;
   @Input() label: string = '';
   @Input() type: string = 'text';
+  @Input() value: string = '';
+  @Input() disabled = false;
+  @Input() readonly = false;
 
-  value: string = '';
-  disabled: boolean = false;
   onChange = (_: any) => {};
   onTouched = () => {};
   private ngControl: NgControl | null = null;

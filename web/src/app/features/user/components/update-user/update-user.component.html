@@ -1,0 +1,14 @@
+<h1 class="gl-header1">Update user</h1>
+<div class="card">
+  <app-custom-input
+    label="Username"
+    [readonly]="true"
+    [value]="user()?.username || ''"
+  />
+
+  <app-custom-input
+    label="Email"
+    [readonly]="true"
+    [value]="user()?.email || ''"
+  />
+</div>

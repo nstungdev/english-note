@@ -1,6 +1,6 @@
-<table mat-table [dataSource]="dataSource" class="table table-striped">
+<table mat-table [dataSource]="dataSource()" class="table table-striped">
   <ng-container matColumnDef="index">
-    <th class="table-header" mat-header-cell *matHeaderCellDef>Index</th>
+    <th class="table-header" mat-header-cell *matHeaderCellDef>#</th>
     <td mat-cell *matCellDef="let row; let i = index">{{ getIndex(i) }}</td>
   </ng-container>
 
@@ -17,10 +17,8 @@
   <ng-container matColumnDef="blocked">
     <th class="table-header" mat-header-cell *matHeaderCellDef>Blocked</th>
     <td mat-cell *matCellDef="let row">
-      <mat-icon class="text-error" *ngIf="row.blocked">block</mat-icon>
-      <mat-icon class="text-success" *ngIf="!row.blocked"
-        >check_circle</mat-icon
-      >
+      <mat-icon class="text-error" *ngIf="row.blocked">lock</mat-icon>
+      <mat-icon class="text-success" *ngIf="!row.blocked">lock_open</mat-icon>
     </td>
   </ng-container>
 

@@ -6,6 +6,7 @@ import { LayoutComponent } from './shared/components/layout/layout.component';
 import { VocabularyOverviewComponent } from './features/vocabulary/components/vocabulary-overview/vocabulary-overview.component';
 import { UserTableComponent } from './features/user/components/user-table/user-table.component';
 import { AuthGuard } from './features/auth/auth.guard';
+import { UpdateUserComponent } from './features/user/components/update-user/update-user.component';
 
 export const routes: Routes = [
   {
@@ -21,6 +22,7 @@ export const routes: Routes = [
       { path: 'vocabulary', component: VocabularyOverviewComponent },
       { path: 'add-vocabulary', component: AddVocabularyComponent },
       { path: 'users', component: UserTableComponent },
+      { path: 'update-user/:id', component: UpdateUserComponent },
       { path: '', redirectTo: '/home', pathMatch: 'full' },
       { path: '**', redirectTo: '/home' },
     ],
