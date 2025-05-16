@@ -41,12 +41,18 @@ export class AuthService {
     return !!this.getAccessToken();
   }
 
-  private setAuthTokens(accessToken: string, refreshToken: string): void {
+  getAuthTokens(): { accessToken: string | null; refreshToken: string | null } {
+    const accessToken = localStorage.getItem(StorageKeys.ACCESS_TOKEN);
+    const refreshToken = localStorage.getItem(StorageKeys.REFRESH_TOKEN);
+    return { accessToken, refreshToken };
+  }
+
+  setAuthTokens(accessToken: string, refreshToken: string): void {
     localStorage.setItem(StorageKeys.ACCESS_TOKEN, accessToken);
     localStorage.setItem(StorageKeys.REFRESH_TOKEN, refreshToken);
   }
 
-  private removeAuthTokens(): void {
+  removeAuthTokens(): void {
     localStorage.removeItem(StorageKeys.ACCESS_TOKEN);
     localStorage.removeItem(StorageKeys.REFRESH_TOKEN);
   }
